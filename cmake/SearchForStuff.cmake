@@ -153,6 +153,17 @@ if (PKG_CONFIG_FOUND)
   endif()
 
   #################################################
+  # Find Roki
+  if (EXISTS "/usr/local/include/roki/rk_fd.h")
+    message (STATUS "Looking for Roki - found")
+    set (HAVE_ROKI TRUE)
+  else()
+    message (STATUS "Looking for Roki - not found")
+    BUILD_WARNING ("Roki not found, for roki physics engine option, please install roki...http://www.mi.ams.eng.osaka-u.ac.jp/software/roki.html")
+    set (HAVE_ROKI FALSE)
+  endif()
+
+  #################################################
   # Find tinyxml. Only debian distributions package tinyxml with a pkg-config
   # Use pkg_check_modules and fallback to manual detection
   # (needed, at least, for MacOS)

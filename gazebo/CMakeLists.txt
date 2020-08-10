@@ -56,6 +56,9 @@ endif()
 if(HAVE_DART)
   add_dependencies(gazebo_physics_dart gazebo_msgs)
 endif()
+if(HAVE_ROKI)
+  add_dependencies(gazebo_physics_roki gazebo_msgs)
+endif()
 
 
 gz_add_executable(gzserver server_main.cc)
@@ -85,6 +88,10 @@ endif()
 
 if (HAVE_BULLET)
   target_link_libraries(gzserver gazebo_physics_bullet)
+endif()
+
+if (HAVE_ROKI)
+  target_link_libraries(gzserver gazebo_physics_roki)
 endif()
 
 if (UNIX)

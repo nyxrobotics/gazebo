@@ -483,6 +483,9 @@ namespace gazebo
 
       /// Friend SimbodyPhysics so that it has access to dataPtr->dirtyPoses
       private: friend class SimbodyPhysics;
+
+      /// Friend Roki so that it has access to dataPtr->dirtyPoses
+      private: friend class RokiLink;
     };
     /// \}
   }

@@ -12,6 +12,10 @@ if (HAVE_SIMBODY)
   add_subdirectory(simbody)
 endif()
 
+if (HAVE_ROKI)
+  add_subdirectory(roki)
+endif()
+
 if (HAVE_GDAL)
   include_directories(${GDAL_INCLUDE_DIR})
 endif()
@@ -140,6 +144,10 @@ endif()
 
 if (HAVE_SIMBODY)
   target_link_libraries(gazebo_physics gazebo_physics_simbody)
+endif()
+
+if (HAVE_ROKI)
+  target_link_libraries(gazebo_physics gazebo_physics_roki)
 endif()
 
 if (HAVE_GDAL)

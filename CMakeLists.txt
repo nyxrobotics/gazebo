@@ -366,6 +366,9 @@ else (build_errors)
   )
 
   # "Second level" deps. Depends on a variety of first level deps
+  if (HAVE_ROKI)
+    set(PKG_LIBRARIES ${PKG_LIBRARIES} gazebo_physics_roki)
+  endif()
   if (HAVE_DART)
     set(PKG_LIBRARIES ${PKG_LIBRARIES} gazebo_physics_dart)
   endif()
