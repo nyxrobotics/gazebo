@@ -15,7 +15,7 @@ namespace gazebo
 {
   namespace physics
   {
-    class GZ_PHYSICS_ODE_VISIBLE RokiLink : public Link
+    class GZ_PHYSICS_VISIBLE RokiLink : public Link
     {
       public: explicit RokiLink(EntityPtr _parent);
       public: virtual ~RokiLink();
@@ -29,40 +29,40 @@ namespace gazebo
       public: virtual void UpdateMass();
 
       public: virtual void UpdateSurface();
-      public: virtual void SetLinearVel(const math::Vector3 &_vel);
-      public: virtual void SetAngularVel(const math::Vector3 &_vel);
+      public: virtual void SetLinearVel(const ignition::math::Vector3d &_vel);
+      public: virtual void SetAngularVel(const ignition::math::Vector3d &_vel);
 
-      public: virtual void SetForce(const math::Vector3 &_force);
-      public: virtual void SetTorque(const math::Vector3 &_torque);
+      public: virtual void SetForce(const ignition::math::Vector3d &_force);
+      public: virtual void SetTorque(const ignition::math::Vector3d &_torque);
 
-      public: virtual void AddForce(const math::Vector3 &_force);
-      public: virtual void AddRelativeForce(const math::Vector3 &_force);
+      public: virtual void AddForce(const ignition::math::Vector3d &_force);
+      public: virtual void AddRelativeForce(const ignition::math::Vector3d &_force);
 
-      public: virtual void AddForceAtWorldPosition(const math::Vector3 &_force,
-                                                   const math::Vector3 &_pos);
+      public: virtual void AddForceAtWorldPosition(const ignition::math::Vector3d &_force,
+                                                   const ignition::math::Vector3d &_pos);
 
       public: virtual void AddForceAtRelativePosition(
-                  const math::Vector3 &_force,
-                  const math::Vector3 &_relpos);
+                  const ignition::math::Vector3d &_force,
+                  const ignition::math::Vector3d &_relpos);
 
-      public: virtual void AddLinkForce(const math::Vector3 &_force,
-          const math::Vector3 &_offset = math::Vector3::Zero);
+      public: virtual void AddLinkForce(const ignition::math::Vector3d &_force,
+          const ignition::math::Vector3d &_offset = ignition::math::Vector3d::Zero);
 
-      public: virtual void AddTorque(const math::Vector3 &_torque);
-      public: virtual void AddRelativeTorque(const math::Vector3 &_torque);
+      public: virtual void AddTorque(const ignition::math::Vector3d &_torque);
+      public: virtual void AddRelativeTorque(const ignition::math::Vector3d &_torque);
 
-      public: virtual math::Vector3 GetWorldLinearVel(
-          const math::Vector3 &_offset) const;
+      public: virtual ignition::math::Vector3d GetWorldLinearVel(
+          const ignition::math::Vector3d &_offset) const;
 
-      public: virtual math::Vector3 GetWorldLinearVel(
-                  const math::Vector3 &_offset,
-                  const math::Quaternion &_q) const;
+      public: virtual ignition::math::Vector3d GetWorldLinearVel(
+                  const ignition::math::Vector3d &_offset,
+                  const ignition::math::Quaterniond &_q) const;
 
-      public: virtual math::Vector3 GetWorldCoGLinearVel() const;
-      public: virtual math::Vector3 GetWorldAngularVel() const;
-      public: virtual math::Vector3 GetWorldForce() const;
+      public: virtual ignition::math::Vector3d GetWorldCoGLinearVel() const;
+      public: virtual ignition::math::Vector3d GetWorldAngularVel() const;
+      public: virtual ignition::math::Vector3d GetWorldForce() const;
 
-      public: virtual math::Vector3 GetWorldTorque() const;
+      public: virtual ignition::math::Vector3d GetWorldTorque() const;
 
       public: virtual void SetGravityMode(bool _mode);
       public: virtual bool GetGravityMode() const;
@@ -88,7 +88,7 @@ namespace gazebo
         RokiLinkPtr GetParentRokiLink() const;
         bool HaveParentRokiLink() const;
         void SetGazeboPoseToRokiFrame();
-        math::Pose GetDirtyPoseFromRoki() const;
+        ignition::math::Pose3d GetDirtyPoseFromRoki() const;
         rkFDCell *GetRkFDCell() const;
         rkChain  *GetRkChain() const;
         RokiCollisionPtr GetRokiCollision() const;

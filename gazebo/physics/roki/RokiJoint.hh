@@ -31,22 +31,22 @@ namespace gazebo
       public: virtual bool AreConnected(LinkPtr _one, LinkPtr _two) const;
       public: virtual void Attach(LinkPtr _parent, LinkPtr _child);
       public: virtual void Detach();
-      public: virtual math::Vector3 GetAnchor(unsigned int _index) const;
-      public: virtual void SetAnchor(unsigned int _index, const gazebo::math::Vector3 & _anchor);
-      public: virtual math::Vector3 GetAxis(unsigned int _index) const;
-      public: virtual math::Vector3 GetGlobalAxis(unsigned int _index) const;
-      public: virtual void SetAxis(unsigned int _index, const math::Vector3& _axis);
-      public: virtual bool SetHighStop(unsigned int _index, const math::Angle &_angle);
-      public: virtual bool SetLowStop(unsigned int _index, const math::Angle &_angle);
-      public: virtual math::Angle GetHighStop(unsigned int _index);
-      public: virtual math::Angle GetLowStop(unsigned int _index);
+      public: virtual ignition::math::Vector3d GetAnchor(unsigned int _index) const;
+      public: virtual void SetAnchor(unsigned int _index, const ignition::math::Vector3d & _anchor);
+      public: virtual ignition::math::Vector3d GetAxis(unsigned int _index) const;
+      public: virtual ignition::math::Vector3d GetGlobalAxis(unsigned int _index) const;
+      public: virtual void SetAxis(unsigned int _index, const ignition::math::Vector3d& _axis);
+      public: virtual bool SetHighStop(unsigned int _index, const ignition::math::Angle &_angle);
+      public: virtual bool SetLowStop(unsigned int _index, const ignition::math::Angle &_angle);
+      public: virtual ignition::math::Angle GetHighStop(unsigned int _index);
+      public: virtual ignition::math::Angle GetLowStop(unsigned int _index);
       public: virtual void SetDamping(unsigned int _index, double _damping);
       public: virtual void SetStiffness(unsigned int _index, const double _stiffness);
       public: virtual void SetStiffnessDamping(unsigned int _index, double _stiffness, double _damping, double _reference = 0);
       public: virtual void SetMaxForce(unsigned int _index, double _force);
       public: virtual double GetMaxForce(unsigned int _index);
-      public: virtual math::Vector3 GetLinkForce(unsigned int _index) const;
-      public: virtual math::Vector3 GetLinkTorque(unsigned int _index) const;
+      public: virtual ignition::math::Vector3d GetLinkForce(unsigned int _index) const;
+      public: virtual ignition::math::Vector3d GetLinkTorque(unsigned int _index) const;
       public: virtual bool SetParam(const std::string &_key, unsigned int _index, const boost::any &_value);
       public: virtual double GetParam(const std::string &_key, unsigned int _index);
       public: virtual JointWrench GetForceTorque(unsigned int _index);
@@ -68,14 +68,14 @@ namespace gazebo
         virtual void SetFriction(const unsigned int _index, const double value);
 
       public:
-        math::Vector3 anchor_pos_;
-        math::Vector3 anchor_axis_;
+        ignition::math::Vector3d anchor_pos_;
+        ignition::math::Vector3d anchor_axis_;
         rkJoint *rkjoint_;
         rkMotor *rkmotor_;
-        math::Pose org2anchor_pose_;
+        ignition::math::Pose3d org2anchor_pose_;
 
-        math::Angle highStop_[MAX_JOINT_AXIS];
-        math::Angle lowStop_[MAX_JOINT_AXIS];
+        ignition::math::Angle highStop_[MAX_JOINT_AXIS];
+        ignition::math::Angle lowStop_[MAX_JOINT_AXIS];
         double friction_[MAX_JOINT_AXIS];
 
         std::map<std::string, boost::any> params_;

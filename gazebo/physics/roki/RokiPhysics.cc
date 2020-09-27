@@ -228,9 +228,9 @@ void RokiPhysics::UpdateCollision()
 
   RokiLinkPtr      link0, link1;
   RokiCollisionPtr collision0, collision1;
-  math::Vector3    pos, norm, pro;
-  math::Vector3    force0, force1;
-  math::Vector3    torque0, torque1;
+  ignition::math::Vector3d    pos, norm, pro;
+  ignition::math::Vector3d    force0, force1;
+  ignition::math::Vector3d    torque0, torque1;
 
   zListForEach(&fd_->cd.plist, cdp){
     if(!cdp->data.is_col) continue;
@@ -260,50 +260,50 @@ void RokiPhysics::UpdateCollision()
         zMulMatTVec3D(rkLinkWldAtt(celld[1]->link), &cdv->data.axis[1], &t1);
         zVec3DMulDRC(&t1, -1.0);
 
-        pos = math::Vector3(
+        pos = ignition::math::Vector3d(
                 zVec3DElem(v->data.vert, 0),
                 zVec3DElem(v->data.vert, 1),
                 zVec3DElem(v->data.vert, 2));
 
-        norm = math::Vector3(
+        norm = ignition::math::Vector3d(
                 zVec3DElem(&v->data.norm, 0),
                 zVec3DElem(&v->data.norm, 1),
                 zVec3DElem(&v->data.norm, 2));
 
-        pro = math::Vector3(
+        pro = ignition::math::Vector3d(
                 zVec3DElem(&v->data.pro, 0),
                 zVec3DElem(&v->data.pro, 1),
                 zVec3DElem(&v->data.pro, 2));
 
-        force0 = math::Vector3(
+        force0 = ignition::math::Vector3d(
                 zVec3DElem(&f0, 0),
                 zVec3DElem(&f0, 1),
                 zVec3DElem(&f0, 2));
 
-        force1 = math::Vector3(
+        force1 = ignition::math::Vector3d(
                 zVec3DElem(&f1, 0),
                 zVec3DElem(&f1, 1),
                 zVec3DElem(&f1, 2));
         
-        torque0 = math::Vector3(
+        torque0 = ignition::math::Vector3d(
                 zVec3DElem(&t0, 0),
                 zVec3DElem(&t0, 1),
                 zVec3DElem(&t0, 2));
         
-        torque1 = math::Vector3(
+        torque1 = ignition::math::Vector3d(
                 zVec3DElem(&t1, 0),
                 zVec3DElem(&t1, 1),
                 zVec3DElem(&t1, 2));
 
         Contact *contactFeedback = this->GetContactManager()->NewContact(
             collision0.get(), collision1.get(),
-            this->world->GetSimTime());
+            this->world->SimTime());
 
         if (contactFeedback == nullptr) continue;
 
         contactFeedback->positions[0] = pos;
         contactFeedback->normals[0] = norm;
-        contactFeedback->depths[0] = (pro - pos).GetLength();
+        contactFeedback->depths[0] = (pro - pos).Length();
 
         if (!link0->IsStatic()) { 
           contactFeedback->wrench[0].body1Force  = force0;
@@ -328,7 +328,7 @@ void RokiPhysics::UpdatePhysics()
   rkFDSetDT(fd_, this->GetMaxStepSize());
   rkFDUpdate(fd_);
 
-  Model_V models = this->world->GetModels();
+  Model_V models = this->world->Models();
   for (Model_V::iterator mi = models.begin(); mi != models.end(); ++mi) {
     Link_V links = (*mi)->GetLinks();
     for (Link_V::iterator li = links.begin(); li != links.end(); ++li) { 
@@ -363,10 +363,10 @@ LinkPtr RokiPhysics::CreateLink(ModelPtr _parent)
 {
   DEBUG_PRINT("RokiPhysics::CreateLink() : parent_model=%s\n", _parent->GetName().c_str());
 
-  if (_parent == NULL)
+  if (_parent == nullptr)
     gzthrow("Link must have a parent\n");
 
-  LinkPtr link(new RokiLink(_parent));
+  RokiLinkPtr link(new RokiLink(_parent));
   link->SetWorld(_parent->GetWorld());
   return link;
 }
@@ -438,7 +438,7 @@ JointPtr RokiPhysics::CreateJoint(const std::string &_type,
   return joint; 
 }
 
-void RokiPhysics::SetGravity(const gazebo::math::Vector3 &_gravity)
+void RokiPhysics::SetGravity(const ignition::math::Vector3d &_gravity)
 {
   DEBUG_PRINT("RokiPhysics::SetGravity() : _gravity=%f, %f, %f)\n", _gravity.x, _gravity.y, _gravity.z);
   this->sdf->GetElement("gravity")->Set(_gravity);
@@ -507,7 +507,7 @@ RokiLinkPtr RokiPhysics::GetRokiLinkByPathName(const char *path_name)
 {
   RokiLinkPtr result_link;
 
-  Model_V models = this->world->GetModels();
+  Model_V models = this->world->Models();
   for (Model_V::iterator mi = models.begin(); mi != models.end(); ++mi) {
     Link_V links = (*mi)->GetLinks();
     for (Link_V::iterator li = links.begin(); li != links.end(); ++li) { 

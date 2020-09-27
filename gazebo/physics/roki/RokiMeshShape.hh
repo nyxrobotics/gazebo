@@ -16,9 +16,9 @@ namespace gazebo
       public: virtual void Init();
       public: virtual void Update();
       private:
-        void InitMesh_(const common::SubMesh *_subMesh,  const math::Vector3 &_scale);
-        void InitMesh_(const common::Mesh *_mesh, const math::Vector3 &_scale);
-        void CreateMesh_(float *_vertices, unsigned int _numVertices, int *_indices, unsigned int _numIndices, const math::Vector3 &_scale);
+        void InitMesh_(const common::SubMesh *_subMesh,  const ignition::math::Vector3d &_scale);
+        void InitMesh_(const common::Mesh *_mesh, const ignition::math::Vector3d &_scale);
+        void CreateMesh_(float *_vertices, unsigned int _numVertices, int *_indices, unsigned int _numIndices, const ignition::math::Vector3d &_scale);
     };
   }
 }

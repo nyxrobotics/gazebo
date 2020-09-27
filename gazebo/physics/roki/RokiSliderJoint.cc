@@ -87,26 +87,26 @@ void RokiSliderJoint::Init()
   //
 
   // position
-  math::Vector3 pos_org_wld = GetChildRokiLink()->GetWorldPose().pos;
-  org2anchor_pose_.pos = anchor_pos_ - pos_org_wld;
-  DEBUG_PRINT("RokiSliderJoint::Init() : name=%s, pos_org_wld=%s, anchor_pos_=%s, org2anchor_pose_.pos=%s\n", GetName().c_str(), conv2str(pos_org_wld), conv2str(anchor_pos_), conv2str(org2anchor_pose_.pos));
+  ignition::math::Vector3d pos_org_wld = GetChildRokiLink()->WorldPose().Pos();
+  org2anchor_pose_.Pos() = anchor_pos_ - pos_org_wld;
+  DEBUG_PRINT("RokiSliderJoint::Init() : name=%s, pos_org_wld=%s, anchor_pos_=%s, org2anchor_pose_.Pos()=%s\n", GetName().c_str(), conv2str(pos_org_wld), conv2str(anchor_pos_), conv2str(org2anchor_pose_.Pos()));
 
   // rotate Z axis -> anchor_axis_ 
-  math::Vector3 axis_z(0, 0, 1);
-  math::Vector3 axis_rot = axis_z.Cross(anchor_axis_);
-  double th = acos(axis_z.Dot(anchor_axis_)/(axis_z.GetLength() * anchor_axis_.GetLength()));
+  ignition::math::Vector3d axis_z(0, 0, 1);
+  ignition::math::Vector3d axis_rot = axis_z.Cross(anchor_axis_);
+  double th = acos(axis_z.Dot(anchor_axis_)/(axis_z.Length() * anchor_axis_.Length()));
 
-  org2anchor_pose_.rot.SetFromAxis(axis_rot.Normalize(), th);
+  org2anchor_pose_.Rot().Axis(axis_rot.Normalize(), th);
 
-  DEBUG_PRINT("RokiSliderJoint::Init() : name=%s, joint_axis_=%s, axis_rot=%s, org2anchor_pose_.rot=%s\n", GetName().c_str(), conv2str(anchor_axis_), conv2str(axis_rot), conv2str(org2anchor_pose_.rot));
+  DEBUG_PRINT("RokiSliderJoint::Init() : name=%s, joint_axis_=%s, axis_rot=%s, org2anchor_pose_.Rot()=%s\n", GetName().c_str(), conv2str(anchor_axis_), conv2str(axis_rot), conv2str(org2anchor_pose_.Rot()));
 
   DEBUG_PRINT("RokiSliderJoint::Init() leave : joint_name=%s\n", GetName().c_str());
 }
 
-math::Angle RokiSliderJoint::GetAngleImpl(unsigned int _index) const
+ignition::math::Angle RokiSliderJoint::GetAngleImpl(unsigned int _index) const
 {
   DEBUG_PRINT("RokiSliderJoint::GetAngleImpl() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-  return math::Angle();
+  return ignition::math::Angle();
 }
 
 void RokiSliderJoint::SetVelocity(unsigned int _index, double _vel)

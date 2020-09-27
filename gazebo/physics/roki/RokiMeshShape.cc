@@ -41,15 +41,15 @@ void RokiMeshShape::Init()
 
   if (this->submesh)
   {
-     InitMesh_(this->submesh, this->sdf->Get<math::Vector3>("scale"));
+     InitMesh_(this->submesh, this->sdf->Get<ignition::math::Vector3d>("scale"));
   }
   else
   {
-     InitMesh_(this->mesh, this->sdf->Get<math::Vector3>("scale"));
+     InitMesh_(this->mesh, this->sdf->Get<ignition::math::Vector3d>("scale"));
   }
 }
 
-void RokiMeshShape::InitMesh_(const common::SubMesh *_subMesh,  const math::Vector3 &_scale)
+void RokiMeshShape::InitMesh_(const common::SubMesh *_subMesh,  const ignition::math::Vector3d &_scale)
 {
   RokiCollisionPtr collision = boost::dynamic_pointer_cast<RokiCollision>(this->collisionParent);
   RokiLinkPtr link = boost::dynamic_pointer_cast<RokiLink>(this->collisionParent->GetLink());
@@ -70,7 +70,7 @@ void RokiMeshShape::InitMesh_(const common::SubMesh *_subMesh,  const math::Vect
   delete [] indices;
 }
 
-void RokiMeshShape::InitMesh_(const common::Mesh *_mesh, const math::Vector3 &_scale)
+void RokiMeshShape::InitMesh_(const common::Mesh *_mesh, const ignition::math::Vector3d &_scale)
 {
   RokiCollisionPtr collision = boost::dynamic_pointer_cast<RokiCollision>(this->collisionParent);
   RokiLinkPtr link = boost::dynamic_pointer_cast<RokiLink>(this->collisionParent->GetLink());
@@ -91,7 +91,7 @@ void RokiMeshShape::InitMesh_(const common::Mesh *_mesh, const math::Vector3 &_s
   delete [] indices;
 }
 
-void RokiMeshShape::CreateMesh_(float *_vertices, unsigned int _numVertices, int *_indices, unsigned int _numIndices, const math::Vector3 &_scale)
+void RokiMeshShape::CreateMesh_(float *_vertices, unsigned int _numVertices, int *_indices, unsigned int _numIndices, const ignition::math::Vector3d &_scale)
 {
   RokiCollisionPtr collision = boost::dynamic_pointer_cast<RokiCollision>(this->collisionParent);
   RokiLinkPtr link = boost::dynamic_pointer_cast<RokiLink>(this->collisionParent->GetLink());
@@ -112,9 +112,9 @@ void RokiMeshShape::CreateMesh_(float *_vertices, unsigned int _numVertices, int
   for (unsigned int i = 0; i < _numVertices; ++i) {
     zVec3D* v;
     v = zPH3DVert(ph, i);
-    zVec3DSetElem(v, zX, _vertices[i * 3 + 0] * _scale.x);
-    zVec3DSetElem(v, zY, _vertices[i * 3 + 1] * _scale.y);
-    zVec3DSetElem(v, zZ, _vertices[i * 3 + 2] * _scale.z);
+    zVec3DSetElem(v, zX, _vertices[i * 3 + 0] * _scale.X());
+    zVec3DSetElem(v, zY, _vertices[i * 3 + 1] * _scale.Y());
+    zVec3DSetElem(v, zZ, _vertices[i * 3 + 2] * _scale.Z());
   }
 
   for (unsigned int i = 0; i < _numIndices/3; ++i) {

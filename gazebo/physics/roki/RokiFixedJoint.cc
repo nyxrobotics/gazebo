@@ -60,10 +60,10 @@ void RokiFixedJoint::Init()
   DEBUG_PRINT("RokiFixedJoint::Init() leave : joint_name=%s\n", GetName().c_str());
 }
 
-math::Angle RokiFixedJoint::GetAngleImpl(unsigned int _index) const
+ignition::math::Angle RokiFixedJoint::GetAngleImpl(unsigned int _index) const
 {
   DEBUG_PRINT("RokiFixedJoint::GetAngleImpl() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-  return math::Angle();
+  return ignition::math::Angle();
 }
 
 void RokiFixedJoint::SetVelocity(unsigned int _index, double _vel)

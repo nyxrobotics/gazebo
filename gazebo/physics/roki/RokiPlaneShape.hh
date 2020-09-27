@@ -16,7 +16,7 @@ namespace gazebo
       public: explicit RokiPlaneShape(CollisionPtr _parent);
       public: virtual ~RokiPlaneShape();
       public: virtual void CreatePlane();
-      public: virtual void SetAltitude(const math::Vector3 &_pos);
+      public: virtual void SetAltitude(const ignition::math::Vector3d &_pos);
     };
   }
 }

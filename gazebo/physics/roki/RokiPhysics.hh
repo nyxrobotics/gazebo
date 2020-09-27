@@ -13,7 +13,7 @@ namespace gazebo
 {
   namespace physics
   {
-    class GZ_PHYSICS_ODE_VISIBLE RokiPhysics : public PhysicsEngine 
+    class GZ_PHYSICS_VISIBLE RokiPhysics : public PhysicsEngine 
     {
       public: enum RokiParam
       {
@@ -46,7 +46,7 @@ namespace gazebo
       public: virtual JointPtr CreateJoint(const std::string &_type,
                                            ModelPtr _parent);
 
-      public: virtual void SetGravity(const gazebo::math::Vector3 &_gravity);
+      public: virtual void SetGravity(const ignition::math::Vector3d &_gravity);
 
       public: virtual void DebugPrint() const;
 

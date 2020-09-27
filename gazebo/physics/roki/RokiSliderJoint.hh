@@ -19,7 +19,7 @@ namespace gazebo
       public: virtual ~RokiSliderJoint();
       public: virtual void Load(sdf::ElementPtr _sdf);
       public: virtual void Init();
-      public: virtual math::Angle GetAngleImpl(unsigned int _index) const;
+      public: virtual ignition::math::Angle GetAngleImpl(unsigned int _index) const;
       public: virtual void SetVelocity(unsigned int _index, double _vel);
       public: virtual double GetVelocity(unsigned int _index) const;
       protected: virtual void SetForceImpl(unsigned int _index, double _effort);

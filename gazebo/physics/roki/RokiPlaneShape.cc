@@ -41,7 +41,7 @@ void RokiPlaneShape::CreatePlane()
   collision->shape_ = shape;
 }
 
-void RokiPlaneShape::SetAltitude(const math::Vector3 &_pos)
+void RokiPlaneShape::SetAltitude(const ignition::math::Vector3d &_pos)
 {
   PlaneShape::SetAltitude(_pos);
 }

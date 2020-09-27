@@ -48,7 +48,7 @@ void RokiModel::Init()
   double mass = 0.0;
   for (Link_V::iterator li = ls.begin(); li != ls.end(); ++li) { 
     RokiLinkPtr link = boost::dynamic_pointer_cast<RokiLink>(*li);
-    mass += link->GetInertial()->GetMass();
+    mass += link->GetInertial()->Mass();
   }
   rkChainSetMass(chain_, mass); 
 
@@ -90,5 +90,5 @@ void RokiModel::DisableSelfCollide()
 
 rkFD* RokiModel::GetRkFD() const
 {
-  return (boost::dynamic_pointer_cast<RokiPhysics>(this->GetWorld()->GetPhysicsEngine()))->fd_;
+  return (boost::dynamic_pointer_cast<RokiPhysics>(this->GetWorld()->Physics()))->fd_;
 }

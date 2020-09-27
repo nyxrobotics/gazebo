@@ -21,14 +21,14 @@ RokiBoxShape::~RokiBoxShape()
   DEBUG_PRINT("RokiBoxShape::~RokiBoxShape()\n");
 }
 
-void RokiBoxShape::SetSize(const math::Vector3 &_size)
+void RokiBoxShape::SetSize(const ignition::math::Vector3d &_size)
 {
   RokiCollisionPtr collision = boost::dynamic_pointer_cast<RokiCollision>(this->collisionParent);
   RokiLinkPtr link = boost::dynamic_pointer_cast<RokiLink>(this->collisionParent->GetLink());
 
   DEBUG_PRINT("RokiBoxShape::SetSize() : link=%s, name=%s, size=(%s)\n", link->GetName().c_str(), GetName().c_str(), conv2str(_size));
 
-  if (_size.x <= 0 || _size.y <= 0 || _size.z <= 0) {
+  if (_size.X() <= 0 || _size.Y() <= 0 || _size.Z() <= 0) {
     gzerr << "Box shape does not support negative size\n";
     return;
   }
@@ -41,7 +41,7 @@ void RokiBoxShape::SetSize(const math::Vector3 &_size)
   zVec3D ax = {{ 1, 0, 0 }};
   zVec3D ay = {{ 0, 1, 0 }};
   zVec3D az = {{ 0, 0, 1 }};
-  zShape3DCreateBox(shape, &zp, &ax, &ay, &az, _size.x, _size.y, _size.z);
+  zShape3DCreateBox(shape, &zp, &ax, &ay, &az, _size.X(), _size.Y(), _size.Z());
   zBox3DInit(zShape3DBB(shape));
 
   zNameSet(shape, const_cast<char*>(link->GetPathName().c_str()));

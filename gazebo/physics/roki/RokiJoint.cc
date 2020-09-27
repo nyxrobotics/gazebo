@@ -94,54 +94,54 @@ void RokiJoint::Detach()
   Joint::Detach();
 }
 
-math::Vector3 RokiJoint::GetAnchor(unsigned int _index) const
+ignition::math::Vector3d RokiJoint::GetAnchor(unsigned int _index) const
 {
   DEBUG_PRINT("RokiFixedJoint::GetAnchor() : joint_name=%s, _index=%d, anchor_pos_=%s\n", GetName().c_str(), _index, conv2str(anchor_pos_));
   return anchor_pos_;
 }
 
-void RokiJoint::SetAnchor(unsigned int _index, const gazebo::math::Vector3 & _anchor)
+void RokiJoint::SetAnchor(unsigned int _index, const ignition::math::Vector3d & _anchor)
 {
   DEBUG_PRINT("RokiJoint::SetAnchor() : joint_name=%s, _index=%d, _anchor=%s\n", GetName().c_str(), _index, conv2str(_anchor));
   anchor_pos_ = _anchor;
 }
 
-math::Vector3 RokiJoint::GetAxis(unsigned int _index) const
+ignition::math::Vector3d RokiJoint::GetAxis(unsigned int _index) const
 {
   DEBUG_PRINT("RokiFixedJoint::GetAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
   return anchor_axis_;
 }
 
-math::Vector3 RokiJoint::GetGlobalAxis(unsigned int _index) const
+ignition::math::Vector3d RokiJoint::GetGlobalAxis(unsigned int _index) const
 {
   DEBUG_PRINT("RokiFixedJoint::GetGlobalAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
   return anchor_axis_;
 }
 
-void RokiJoint::SetAxis(unsigned int _index, const math::Vector3& _axis)
+void RokiJoint::SetAxis(unsigned int _index, const ignition::math::Vector3d& _axis)
 {
   DEBUG_PRINT("RokiJoint::SetAxis() : joint_name=%s, _index=%d, _axis=%s\n", GetName().c_str(), _index, conv2str(_axis));
   anchor_axis_ = _axis;
 }
 
-bool RokiJoint::SetHighStop(unsigned int _index, const math::Angle &_angle)
+bool RokiJoint::SetHighStop(unsigned int _index, const ignition::math::Angle &_angle)
 {
   highStop_[_index] = _angle;
   return true;
 }
 
-bool RokiJoint::SetLowStop(unsigned int _index, const math::Angle &_angle)
+bool RokiJoint::SetLowStop(unsigned int _index, const ignition::math::Angle &_angle)
 {
   lowStop_[_index] = _angle;
   return true;
 }
 
-math::Angle RokiJoint::GetHighStop(unsigned int _index)
+ignition::math::Angle RokiJoint::GetHighStop(unsigned int _index)
 {
   return highStop_[_index];
 }
 
-math::Angle RokiJoint::GetLowStop(unsigned int _index)
+ignition::math::Angle RokiJoint::GetLowStop(unsigned int _index)
 {
   return lowStop_[_index];
 }
@@ -183,19 +183,19 @@ double RokiJoint::GetMaxForce(unsigned int _index)
   return 0.0;
 }
 
-math::Vector3 RokiJoint::GetLinkForce(unsigned int _index) const
+ignition::math::Vector3d RokiJoint::GetLinkForce(unsigned int _index) const
 {
   DEBUG_PRINT("RokiJoint::GetLinkForce() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
 
-  math::Vector3 result;
+  ignition::math::Vector3d result;
   return result;
 }
 
-math::Vector3 RokiJoint::GetLinkTorque(unsigned int _index) const
+ignition::math::Vector3d RokiJoint::GetLinkTorque(unsigned int _index) const
 {
   DEBUG_PRINT("RokiJoint::GetLinkTorque() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
 
-  math::Vector3 result;
+  ignition::math::Vector3d result;
   return result;
 }
 
