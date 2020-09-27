@@ -103,10 +103,19 @@ void RokiSliderJoint::Init()
   DEBUG_PRINT("RokiSliderJoint::Init() leave : joint_name=%s\n", GetName().c_str());
 }
 
-ignition::math::Angle RokiSliderJoint::GetAngleImpl(unsigned int _index) const
+double RokiSliderJoint::PositionImpl(unsigned int _index) const
 {
-  DEBUG_PRINT("RokiSliderJoint::GetAngleImpl() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-  return ignition::math::Angle();
+  DEBUG_PRINT("RokiSliderJoint::PositionImpl() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
+  if (_index >= this->DOF())
+  {
+    gzerr << "Invalid axis index [" << _index << "]" << std::endl;
+    return ignition::math::NAN_D;
+  }
+  // Compute slider angle from gazebo's cached poses instead
+  auto offset = this->WorldPose().Pos()
+              - this->ParentWorldPose().Pos();
+  auto axis = this->GlobalAxis(_index);
+  return axis.Dot(offset);
 }
 
 void RokiSliderJoint::SetVelocity(unsigned int _index, double _vel)

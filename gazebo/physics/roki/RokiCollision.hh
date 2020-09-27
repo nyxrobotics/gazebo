@@ -28,7 +28,7 @@ namespace gazebo
       public: virtual unsigned int GetCategoryBits() const;
       public: virtual unsigned int GetCollideBits() const;
 
-      public: virtual ignition::math::Box GetBoundingBox() const;
+      public: virtual ignition::math::Box BoundingBox() const;
 
       public:
         std::string GetPathName() const;

@@ -440,7 +440,7 @@ JointPtr RokiPhysics::CreateJoint(const std::string &_type,
 
 void RokiPhysics::SetGravity(const ignition::math::Vector3d &_gravity)
 {
-  DEBUG_PRINT("RokiPhysics::SetGravity() : _gravity=%f, %f, %f)\n", _gravity.x, _gravity.y, _gravity.z);
+  DEBUG_PRINT("RokiPhysics::SetGravity() : _gravity=%f, %f, %f)\n", _gravity.X(), _gravity.Y(), _gravity.Z());
   this->sdf->GetElement("gravity")->Set(_gravity);
 }
 
@@ -482,7 +482,7 @@ void RokiPhysics::OnPhysicsMsg(ConstPhysicsPtr &_msg)
   PhysicsEngine::OnPhysicsMsg(_msg);
 
   if (_msg->has_enable_physics())
-    this->world->EnablePhysicsEngine(_msg->enable_physics());
+    this->world->SetPhysicsEnabled(_msg->enable_physics());
 
   if (_msg->has_gravity())
     this->SetGravity(msgs::ConvertIgn(_msg->gravity()));

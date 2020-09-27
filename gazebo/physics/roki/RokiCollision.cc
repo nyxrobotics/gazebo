@@ -77,9 +77,9 @@ unsigned int RokiCollision::GetCollideBits() const
   return 0;
 }
 
-ignition::math::Box RokiCollision::GetBoundingBox() const
+ignition::math::Box RokiCollision::BoundingBox() const
 {
-  DEBUG_PRINT("RokiCollision::GetBoundingBox() : name=%s\n", GetPathName().c_str());
+  DEBUG_PRINT("RokiCollision::BoundingBox() : name=%s\n", GetPathName().c_str());
 
   ignition::math::Box result;
   gzerr << "Roki does not provide bounding box info.\n";

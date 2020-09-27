@@ -28,6 +28,15 @@ RokiLink::RokiLink(EntityPtr _parent)
   DEBUG_PRINT("RokiLink::RokiLink()\n");
 }
 
+// RokiLink::RokiLink(EntityPtr _parent)
+//   : Link(_parent)
+// {
+//   rklink_anchor_ = nullptr;
+//   rklink_org_ = nullptr;
+//   rklink_anchor_id_ = -1;
+//   rklink_org_id_ = -1;
+//   DEBUG_PRINT("RokiLink::RokiLink()\n");
+// }
 RokiLink::~RokiLink()
 {
   DEBUG_PRINT("RokiLink::~RokiLink()\n");
@@ -181,26 +190,26 @@ void RokiLink::SetLinearVel(const ignition::math::Vector3d &_vel)
   DEBUG_PRINT("RokiLink::SetLinerVel() : name=%s, vel~(%s)\n", GetPathName().c_str(), conv2str(_vel));
 }
 
-ignition::math::Vector3d RokiLink::GetWorldLinearVel(const ignition::math::Vector3d &_offset) const
+ignition::math::Vector3d RokiLink::WorldLinearVel(const ignition::math::Vector3d &_offset) const
 {
-  DEBUG_PRINT("RokiLink::GetWorldLinearVel() : name=%s, offset=(%s)\n", GetPathName().c_str(), conv2str(_offset));
+  DEBUG_PRINT("RokiLink::WorldLinearVel() : name=%s, offset=(%s)\n", GetPathName().c_str(), conv2str(_offset));
 
   ignition::math::Vector3d vec;
   return vec;
 }
 
-ignition::math::Vector3d RokiLink::GetWorldLinearVel(const ignition::math::Vector3d &_offset,
+ignition::math::Vector3d RokiLink::WorldLinearVel(const ignition::math::Vector3d &_offset,
                                          const ignition::math::Quaterniond &_q) const
 {
-  DEBUG_PRINT("RokiLink::GetWorldCoGLinearVel() : name=%s, offset=(%s), q=(%s)\n", GetPathName().c_str(), conv2str(_offset), conv2str(_q));
+  DEBUG_PRINT("RokiLink::WorldLinearVel() : name=%s, offset=(%s), q=(%s)\n", GetPathName().c_str(), conv2str(_offset), conv2str(_q));
 
   ignition::math::Vector3d vel;
   return vel;
 }
 
-ignition::math::Vector3d RokiLink::GetWorldCoGLinearVel() const
+ignition::math::Vector3d RokiLink::WorldCoGLinearVel() const
 {
-  DEBUG_PRINT("RokiLink::GetWorldCoGLinearVel() : name=%s\n", GetPathName().c_str());
+  DEBUG_PRINT("RokiLink::WorldCoGLinearVel() : name=%s\n", GetPathName().c_str());
 
   ignition::math::Vector3d vel;
   return vel;
@@ -211,9 +220,9 @@ void RokiLink::SetAngularVel(const ignition::math::Vector3d &_vel)
   DEBUG_PRINT("RokiLink::SetAngularVel() : name=%s, vel~(%s)\n", GetPathName().c_str(), conv2str(_vel));
 }
 
-ignition::math::Vector3d RokiLink::GetWorldAngularVel() const
+ignition::math::Vector3d RokiLink::WorldAngularVel() const
 {
-  DEBUG_PRINT("RokiLink::GetWorldAngularVel() : name=%s\n", GetPathName().c_str());
+  DEBUG_PRINT("RokiLink::WorldAngularVel() : name=%s\n", GetPathName().c_str());
 
   ignition::math::Vector3d vel;
   return vel;
@@ -266,17 +275,17 @@ void RokiLink::AddRelativeTorque(const ignition::math::Vector3d &_torque)
   DEBUG_PRINT("RokiLink::AddRelativeTorque() name=%s, torque=(%s)\n", GetPathName().c_str(), conv2str(_torque));
 }
 
-ignition::math::Vector3d RokiLink::GetWorldForce() const
+ignition::math::Vector3d RokiLink::WorldForce() const
 {
-  DEBUG_PRINT("RokiLink::GetWorldForce() : name=%s\n", GetPathName().c_str());
+  DEBUG_PRINT("RokiLink::WorldForce() : name=%s\n", GetPathName().c_str());
 
   ignition::math::Vector3d force;
   return force;
 }
 
-ignition::math::Vector3d RokiLink::GetWorldTorque() const
+ignition::math::Vector3d RokiLink::WorldTorque() const
 {
-  DEBUG_PRINT("RokiLink::GetWorldTorque() : name=%s\n", GetPathName().c_str());
+  DEBUG_PRINT("RokiLink::WorldTorque() : name=%s\n", GetPathName().c_str());
 
   ignition::math::Vector3d torque;
   return torque;

@@ -51,18 +51,18 @@ namespace gazebo
       public: virtual void AddTorque(const ignition::math::Vector3d &_torque);
       public: virtual void AddRelativeTorque(const ignition::math::Vector3d &_torque);
 
-      public: virtual ignition::math::Vector3d GetWorldLinearVel(
+      public: virtual ignition::math::Vector3d WorldLinearVel(
           const ignition::math::Vector3d &_offset) const;
 
-      public: virtual ignition::math::Vector3d GetWorldLinearVel(
+      public: virtual ignition::math::Vector3d WorldLinearVel(
                   const ignition::math::Vector3d &_offset,
                   const ignition::math::Quaterniond &_q) const;
 
-      public: virtual ignition::math::Vector3d GetWorldCoGLinearVel() const;
-      public: virtual ignition::math::Vector3d GetWorldAngularVel() const;
-      public: virtual ignition::math::Vector3d GetWorldForce() const;
+      public: virtual ignition::math::Vector3d WorldCoGLinearVel() const;
+      public: virtual ignition::math::Vector3d WorldAngularVel() const;
+      public: virtual ignition::math::Vector3d WorldForce() const;
 
-      public: virtual ignition::math::Vector3d GetWorldTorque() const;
+      public: virtual ignition::math::Vector3d WorldTorque() const;
 
       public: virtual void SetGravityMode(bool _mode);
       public: virtual bool GetGravityMode() const;
