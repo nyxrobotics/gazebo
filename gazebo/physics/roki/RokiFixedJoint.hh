@@ -1,8 +1,8 @@
 #ifndef _ROKIFIXEDJOINT_HH_
 #define _ROKIFIXEDJOINT_HH_
 
-#include "gazebo/math/Angle.hh"
-#include "gazebo/math/Vector3.hh"
+#include "ignition/math/Angle.hh"
+#include "ignition/math/Vector3.hh"
 
 #include "gazebo/util/system.hh"
 

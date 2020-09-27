@@ -1,7 +1,7 @@
 #include <sstream>
 
 #include "gazebo/common/Console.hh"
-#include "gazebo/math/Box.hh"
+#include "ignition/math/Box.hh"
 
 #include "gazebo/physics/roki/RokiModel.hh"
 #include "gazebo/physics/roki/RokiLink.hh"

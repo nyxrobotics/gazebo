@@ -1,7 +1,7 @@
 #ifndef _ROKIBOXSHAPE_HH_
 #define _ROKIBOXSHAPE_HH_
 
-#include "gazebo/math/Vector3.hh"
+#include "ignition/math/Vector3.hh"
 #include "gazebo/physics/BoxShape.hh"
 #include "gazebo/physics/roki/RokiTypes.hh"
 #include "gazebo/physics/roki/RokiLink.hh"
