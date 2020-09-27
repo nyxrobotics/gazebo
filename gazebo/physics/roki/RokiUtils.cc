@@ -80,8 +80,8 @@ std::string gazebo::physics::any2str_(const boost::any &a)
   else if(a.type() == typeid(long long)) {
     ss << boost::any_cast<long long>(a);
   }
-  else if(a.type() == typeid(gazebo::math::Vector3)) {
-    ss << boost::any_cast<gazebo::math::Vector3>(a);
+  else if(a.type() == typeid(ignition::math::Vector3d)) {
+    ss << boost::any_cast<ignition::math::Vector3d>(a);
   }
   else if(a.type() == typeid(ignition::math::Vector3d)) {
     ss << boost::any_cast<ignition::math::Vector3d>(a);
@@ -94,7 +94,7 @@ std::string gazebo::physics::any2str_(const boost::any &a)
   return ss.str();
 }
 
-std::string gazebo::physics::conv2str_(const math::Angle &a)
+std::string gazebo::physics::conv2str_(const ignition::math::Angle &a)
 {
   std::stringstream ss;
   ss.precision(5);
@@ -102,7 +102,7 @@ std::string gazebo::physics::conv2str_(const math::Angle &a)
   return ss.str();
 }
 
-std::string gazebo::physics::conv2str_(const math::Vector3 &v)
+std::string gazebo::physics::conv2str_(const ignition::math::Vector3d &v)
 {
   std::stringstream ss;
   ss.precision(5);
@@ -110,7 +110,7 @@ std::string gazebo::physics::conv2str_(const math::Vector3 &v)
   return ss.str();
 }
 
-std::string gazebo::physics::conv2str_(const math::Quaternion &q)
+std::string gazebo::physics::conv2str_(const ignition::math::Quaterniond &q)
 {
   std::stringstream ss;
   ss.precision(5);
@@ -118,7 +118,7 @@ std::string gazebo::physics::conv2str_(const math::Quaternion &q)
   return ss.str();
 }
 
-std::string gazebo::physics::conv2str_(const math::Matrix3 &m)
+std::string gazebo::physics::conv2str_(const ignition::math::Matrix3d &m)
 {
   std::stringstream ss;
   ss.precision(5);
@@ -126,7 +126,7 @@ std::string gazebo::physics::conv2str_(const math::Matrix3 &m)
   return ss.str();
 }
 
-std::string gazebo::physics::conv2str_(const math::Matrix4 &m)
+std::string gazebo::physics::conv2str_(const ignition::math::Matrix4d &m)
 {
   std::stringstream ss;
   ss.precision(5);
@@ -134,7 +134,7 @@ std::string gazebo::physics::conv2str_(const math::Matrix4 &m)
   return ss.str();
 }
 
-std::string gazebo::physics::conv2str_(const math::Pose &p)
+std::string gazebo::physics::conv2str_(const ignition::math::Pose3d &p)
 {
   std::stringstream ss;
   ss.precision(5);
@@ -166,36 +166,35 @@ std::string gazebo::physics::conv2str_(const zFrame3D* f)
   return ss.str();
 }
 
-math::Pose gazebo::physics::conv2pose(const zVec dis, const int chain_offset_idx)
+ignition::math::Pose3d gazebo::physics::conv2pose(const zVec dis, const int chain_offset_idx)
 {
-  math::Pose pose;
+  ignition::math::Pose3d pose;
 
-  math::Vector3 pos;
-  math::Quaternion q;
+  ignition::math::Vector3d pos;
+  ignition::math::Quaterniond q;
 
-  pos.x   = zVecElem(dis, chain_offset_idx + 0);
-  pos.y   = zVecElem(dis, chain_offset_idx + 1);
-  pos.z   = zVecElem(dis, chain_offset_idx + 2);
+  pos.X()   = zVecElem(dis, chain_offset_idx + 0);
+  pos.Y()   = zVecElem(dis, chain_offset_idx + 1);
+  pos.Z()   = zVecElem(dis, chain_offset_idx + 2);
 
-  math::Vector3 aa(
+  ignition::math::Vector3d aa(
     zVecElem(dis, chain_offset_idx + 3),
     zVecElem(dis, chain_offset_idx + 4),
     zVecElem(dis, chain_offset_idx + 5));
 
-  double angle = aa.GetLength(); // norm
+  double angle = aa.Length(); // norm
   printf("angle=%f\n", angle);
 
   if (angle > 0.00001) {
-    q.SetFromAxis(aa.x/angle, aa.y/angle, aa.z/angle, angle);
+    q.Axis(aa.X()/angle, aa.Y()/angle, aa.Z()/angle, angle);
   }
 
-  pose.pos = pos;
-  pose.rot = q;
+  pose.Set(pos, q);
 
   return pose;
 }
 
-math::Pose gazebo::physics::conv2pose(const zFrame3D *f)
+ignition::math::Pose3d gazebo::physics::conv2pose(const zFrame3D *f)
 {
   // // zeo/zeo_frame.h
   // typedef struct{
@@ -230,13 +229,13 @@ math::Pose gazebo::physics::conv2pose(const zFrame3D *f)
   // #define zMat3DVec(m,i)         ( &(m)->v[(i)] )
   // #define zMat3DSetVec(m,i,v)    zVec3DCopy(v,zMat3DVec(m,i)
 
-  math::Pose pose;
-  math::Vector3 pos;
-  math::Matrix4 m;
+  ignition::math::Pose3d pose;
+  ignition::math::Vector3d pos;
+  ignition::math::Matrix4d m;
 
-  pos.x = zVec3DElem(zFrame3DPos(f), 0);
-  pos.y = zVec3DElem(zFrame3DPos(f), 1);
-  pos.z = zVec3DElem(zFrame3DPos(f), 2);
+  pos.X() = zVec3DElem(zFrame3DPos(f), 0);
+  pos.Y() = zVec3DElem(zFrame3DPos(f), 1);
+  pos.Z() = zVec3DElem(zFrame3DPos(f), 2);
 
   m.Set(
     zMat3DElem(zFrame3DAtt(f), 0, 0),
@@ -260,40 +259,39 @@ math::Pose gazebo::physics::conv2pose(const zFrame3D *f)
     1
   );
 
-  pose.pos = pos;
-  pose.rot = m.Inverse().GetRotation();
+  pose.Set(pos, m.Inverse().Rotation());
 
   return pose;
 }
 
-void gazebo::physics::pose2zFrame3D(const math::Pose &pose, zFrame3D *f)
+void gazebo::physics::pose2zFrame3D(const ignition::math::Pose3d &pose, zFrame3D *f)
 {
-    zVec3DCreate(zFrame3DPos(f), pose.pos.x, pose.pos.y, pose.pos.z);
+    zVec3DCreate(zFrame3DPos(f), pose.Pos().X(), pose.Pos().Y(), pose.Pos().Z());
 
-    math::Matrix3 m = pose.rot.GetAsMatrix3();
+    ignition::math::Matrix3d m(pose.Rot());
 
     zMat3DCreate(
         zFrame3DAtt(f),
-        m[0][0], m[0][1], m[0][2],
-        m[1][0], m[1][1], m[1][2],
-        m[2][0], m[2][1], m[2][2]);
+        m(0,0), m(0,1), m(0,2),
+        m(1,0), m(1,1), m(1,2),
+        m(2,0), m(2,1), m(2,2));
 }
 
-void gazebo::physics::pose2rklinkdis(const math::Pose &pose, rkFDCell *lc, rkChain *chain, const int &rklink_idx)
+void gazebo::physics::pose2rklinkdis(const ignition::math::Pose3d &pose, rkFDCell *lc, rkChain *chain, const int &rklink_idx)
 {
     zVec dis = zVecAlloc(rkChainJointSize(chain));
     rkChainGetJointDisAll(chain, dis);
 
     int chain_offset_idx = rkChainLinkOffset(chain, rklink_idx);
 
-    math::Vector3 angle = pose.rot.GetAsEuler();
+    ignition::math::Vector3d angle = pose.Rot().Euler();
 
-    zVecElem(dis, chain_offset_idx + 0) = pose.pos.x;
-    zVecElem(dis, chain_offset_idx + 1) = pose.pos.y;
-    zVecElem(dis, chain_offset_idx + 2) = pose.pos.z;
-    zVecElem(dis, chain_offset_idx + 3) = angle.x;
-    zVecElem(dis, chain_offset_idx + 4) = angle.y;
-    zVecElem(dis, chain_offset_idx + 5) = angle.z;
+    zVecElem(dis, chain_offset_idx + 0) = pose.Pos().X();
+    zVecElem(dis, chain_offset_idx + 1) = pose.Pos().Y();
+    zVecElem(dis, chain_offset_idx + 2) = pose.Pos().Z();
+    zVecElem(dis, chain_offset_idx + 3) = angle.X();
+    zVecElem(dis, chain_offset_idx + 4) = angle.Y();
+    zVecElem(dis, chain_offset_idx + 5) = angle.X();
 
     // apply chain displacementj
     rkFDChainSetDis(lc, dis);
