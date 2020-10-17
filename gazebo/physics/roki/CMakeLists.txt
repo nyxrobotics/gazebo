@@ -1,33 +1,23 @@
 include (${gazebo_cmake_dir}/GazeboUtils.cmake)
 
-include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/deps/opende/include)
-
-link_directories(
-  ${CCD_LIBRARY_DIRS}
-  ${Boost_LIBRARY_DIRS}
-)
-
-if (WIN32)
-  add_definitions(-DBUILDING_DLL_GZ_PHYSICS_ROKI)
-endif()
-
-set (sources
-  RokiModel.cc
-  RokiCollision.cc
-  RokiLink.cc
-  RokiPhysics.cc
-  RokiUtils.cc
-  RokiBoxShape.cc
-  RokiSphereShape.cc
-  RokiMeshShape.cc
-  RokiCylinderShape.cc
-  RokiPlaneShape.cc
-  RokiJoint.cc
-  RokiHingeJoint.cc
-  RokiSliderJoint.cc
-  RokiFixedJoint.cc
-  RokiSurfaceParams.cc
-  rk_motor_pseudo.cc
+set (sources ${sources}
+  roki/RokiModel.cc
+  roki/RokiCollision.cc
+  roki/RokiLink.cc
+  roki/RokiPhysics.cc
+  roki/RokiUtils.cc
+  roki/RokiBoxShape.cc
+  roki/RokiSphereShape.cc
+  roki/RokiMeshShape.cc
+  roki/RokiCylinderShape.cc
+  roki/RokiPlaneShape.cc
+  roki/RokiJoint.cc
+  roki/RokiHingeJoint.cc
+  roki/RokiSliderJoint.cc
+  roki/RokiFixedJoint.cc
+  roki/RokiSurfaceParams.cc
+  roki/rk_motor_pseudo.cc
+  PARENT_SCOPE
 )
 
 SET (headers
@@ -49,23 +39,24 @@ SET (headers
   rk_motor_pseudo.h
 )
 
-gz_add_library(gazebo_physics_roki ${headers} ${sources})
-target_link_libraries(gazebo_physics_roki
-  gazebo_opcode
-  gazebo_common
-  gazebo_math
-  roki
-  zeo
-  zm
-  cure
-  m
-)
-
-gz_install_library(gazebo_physics_roki)
-gz_install_includes("physics/roki" ${headers})
+# gz_add_library(gazebo_physics_roki ${headers} ${sources})
+# target_link_libraries(gazebo_physics_roki
+#   gazebo_opcode
+#   gazebo_common
+#   gazebo_math
+#   roki
+#   zeo
+#   zm
+#   cure
+#   m
+# )
+#gz_install_library(gazebo_physics_roki)
+#gz_install_includes("physics/roki" ${headers})
 
 # unit tests
 set (gtest_sources
   RokiPhysics_TEST.cc
 )
 gz_build_tests(${gtest_sources})
+
+gz_install_includes("physics/roki" ${headers})

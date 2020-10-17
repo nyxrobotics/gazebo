@@ -487,6 +487,17 @@ if (PKG_CONFIG_FOUND)
   endif ()
 
   #################################################
+  # Find Roki
+  if (EXISTS "/usr/include/roki/rk_fd.h")
+    message (STATUS "Looking for Roki - found")
+    set (HAVE_ROKI TRUE)
+  else()
+    message (STATUS "Looking for Roki - not found")
+    BUILD_WARNING ("Roki not found, for roki physics engine option, please install roki...http://www.mi.ams.eng.osaka-u.ac.jp/software/roki.html")
+    set (HAVE_ROKI FALSE)
+  endif()
+  
+  #################################################
   # Find bullet
   # First and preferred option is to look for bullet standard pkgconfig,
   # so check it first. if it is not present, check for the OSRF

@@ -22,6 +22,10 @@ if (WIN32)
   include_directories(${libdl_include_dir})
 endif()
 
+if (HAVE_ROKI)
+  link_directories(${ROKI_LIBRARY_DIRS})
+endif()
+
 if (HAVE_BULLET)
   link_directories(${BULLET_LIBRARY_DIRS})
 endif()
