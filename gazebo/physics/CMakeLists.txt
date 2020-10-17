@@ -9,6 +9,16 @@ link_directories(
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/deps/opende/include)
 add_subdirectory(ode)
 
+# Add roki support if present
+message([WARNING] "Searching ROKI" ...)
+if (HAVE_ROKI)
+  message([WARNING] "Found ROKI" ...)
+  include_directories(${ROKI_INCLUDE_DIRS})
+  link_directories(${ROKI_LIBRARY_DIRS})
+  add_definitions(${ROKI_CFLAGS})
+  add_subdirectory(roki)
+endif()
+
 # Add Bullet support if present
 if (HAVE_BULLET)
   include_directories(${BULLET_INCLUDE_DIRS})
@@ -166,6 +176,11 @@ target_link_libraries(gazebo_physics
   ${Boost_LIBRARIES}
   ${IGNITION-TRANSPORT_LIBRARIES}
 )
+
+# Link in roki support if present
+if (HAVE_ROKI)
+  target_link_libraries(gazebo_physics ${ROKI_LIBRARIES})
+endif()
 
 # Link in Bullet support if present
 if (HAVE_BULLET)
