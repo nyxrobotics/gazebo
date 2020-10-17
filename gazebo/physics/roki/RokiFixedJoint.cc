@@ -60,10 +60,11 @@ void RokiFixedJoint::Init()
   DEBUG_PRINT("RokiFixedJoint::Init() leave : joint_name=%s\n", GetName().c_str());
 }
 
-ignition::math::Angle RokiFixedJoint::GetAngleImpl(unsigned int _index) const
+ double RokiFixedJoint::PositionImpl(unsigned int _index) const
 {
-  DEBUG_PRINT("RokiFixedJoint::GetAngleImpl() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-  return ignition::math::Angle();
+  gzwarn << "ODEFixedJoint: called method "
+         << "PositionImpl that is not valid for joints of type fixed.\n";
+  return ignition::math::NAN_D;
 }
 
 void RokiFixedJoint::SetVelocity(unsigned int _index, double _vel)
