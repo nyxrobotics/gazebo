@@ -94,54 +94,52 @@ void RokiJoint::Detach()
   Joint::Detach();
 }
 
-ignition::math::Vector3d RokiJoint::GetAnchor(unsigned int _index) const
+ignition::math::Vector3d RokiJoint::Anchor(const unsigned int _index) const
 {
   DEBUG_PRINT("RokiFixedJoint::GetAnchor() : joint_name=%s, _index=%d, anchor_pos_=%s\n", GetName().c_str(), _index, conv2str(anchor_pos_));
   return anchor_pos_;
 }
 
-void RokiJoint::SetAnchor(unsigned int _index, const ignition::math::Vector3d & _anchor)
+void RokiJoint::SetAnchor(const unsigned int _index, const ignition::math::Vector3d &_anchor)
 {
   DEBUG_PRINT("RokiJoint::SetAnchor() : joint_name=%s, _index=%d, _anchor=%s\n", GetName().c_str(), _index, conv2str(_anchor));
   anchor_pos_ = _anchor;
 }
 
-ignition::math::Vector3d RokiJoint::GetAxis(unsigned int _index) const
-{
-  DEBUG_PRINT("RokiFixedJoint::GetAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
-  return anchor_axis_;
-}
+// ignition::math::Vector3d RokiJoint::GetAxis(unsigned int _index) const
+// {
+//   DEBUG_PRINT("RokiFixedJoint::GetAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
+//   return anchor_axis_;
+// }
 
-ignition::math::Vector3d RokiJoint::GetGlobalAxis(unsigned int _index) const
-{
-  DEBUG_PRINT("RokiFixedJoint::GetGlobalAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
-  return anchor_axis_;
-}
+// ignition::math::Vector3d RokiJoint::GetGlobalAxis(unsigned int _index) const
+// {
+//   DEBUG_PRINT("RokiFixedJoint::GetGlobalAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
+//   return anchor_axis_;
+// }
 
-void RokiJoint::SetAxis(unsigned int _index, const ignition::math::Vector3d& _axis)
+void RokiJoint::SetAxis(const unsigned int _index, const ignition::math::Vector3d& _axis)
 {
   DEBUG_PRINT("RokiJoint::SetAxis() : joint_name=%s, _index=%d, _axis=%s\n", GetName().c_str(), _index, conv2str(_axis));
   anchor_axis_ = _axis;
 }
 
-bool RokiJoint::SetHighStop(unsigned int _index, const ignition::math::Angle &_angle)
+void RokiJoint::SetUpperLimit(const unsigned int _index, const double _limit)
 {
-  highStop_[_index] = _angle;
-  return true;
+  highStop_[_index] = _limit;
 }
 
-bool RokiJoint::SetLowStop(unsigned int _index, const ignition::math::Angle &_angle)
+void RokiJoint::SetLowerLimit(const unsigned int _index, const double _limit)
 {
-  lowStop_[_index] = _angle;
-  return true;
+  lowStop_[_index] = _limit;
 }
 
-ignition::math::Angle RokiJoint::GetHighStop(unsigned int _index)
+double RokiJoint::UpperLimit(const unsigned int _index = 0) const
 {
   return highStop_[_index];
 }
 
-ignition::math::Angle RokiJoint::GetLowStop(unsigned int _index)
+double RokiJoint::LowerLimit(const unsigned int _index = 0) const
 {
   return lowStop_[_index];
 }
@@ -149,7 +147,7 @@ ignition::math::Angle RokiJoint::GetLowStop(unsigned int _index)
 void RokiJoint::SetDamping(unsigned int _index, double _damping)
 {
   DEBUG_PRINT("RokiJoint::SetDamping() : joint_name=%s, _index=%d, _damping=%f\n", GetName().c_str(), _index, _damping);
-  if (_index < GetAngleCount()) {
+  if (_index < DOF()) {
     this->SetStiffnessDamping(_index, this->stiffnessCoefficient[_index], _damping);
   }
 }
@@ -157,7 +155,7 @@ void RokiJoint::SetDamping(unsigned int _index, double _damping)
 void RokiJoint::SetStiffness(unsigned int _index, const double _stiffness)
 {
   DEBUG_PRINT("RokiJoint::SetStiffness() : joint_name=%s, _index=%d, _stiffness=%f\n", GetName().c_str(), _index, _stiffness);
-  if (_index < GetAngleCount()) {
+  if (_index < DOF()) {
     this->SetStiffnessDamping(_index, _stiffness, this->dissipationCoefficient[_index]);
   }
 }
@@ -165,38 +163,40 @@ void RokiJoint::SetStiffness(unsigned int _index, const double _stiffness)
 void RokiJoint::SetStiffnessDamping(unsigned int _index, double _stiffness, double _damping, double _reference)
 {
   DEBUG_PRINT("RokiJoint::SetStiffness() : joint_name=%s, _index=%d, _stiffness=%f\n", GetName().c_str(), _index, _stiffness);
-  if (_index < this->GetAngleCount()) {
+  if (_index < this->DOF()) {
     this->stiffnessCoefficient[_index]    = _stiffness;
     this->dissipationCoefficient[_index]  = _damping;
     this->springReferencePosition[_index] = _reference;
   }
 }
 
-void RokiJoint::SetMaxForce(unsigned int _index, double _force)
+// void RokiJoint::SetMaxForce(unsigned int _index, double _force)
+// {
+//   DEBUG_PRINT("RokiJoint::SetMaxForce() : joint_name=%s, _index=%d, _force=%f\n", GetName().c_str(), _index, _force);
+// }
+
+// double RokiJoint::GetMaxForce(unsigned int _index)
+// {
+//   DEBUG_PRINT("RokiJoint::GetMaxForce() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
+//   return 0.0;
+// }
+
+ignition::math::Vector3d RokiJoint::LinkForce(const unsigned int _index) const
 {
-  DEBUG_PRINT("RokiJoint::SetMaxForce() : joint_name=%s, _index=%d, _force=%f\n", GetName().c_str(), _index, _force);
+  // DEBUG_PRINT("RokiJoint::LinkForce() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
+  // ignition::math::Vector3d result;
+  // return result;
+  gzerr << "Not implement in roki\n";
+  return ignition::math::Vector3d::Zero;
 }
 
-double RokiJoint::GetMaxForce(unsigned int _index)
+ignition::math::Vector3d RokiJoint::LinkTorque(const unsigned int _index) const
 {
-  DEBUG_PRINT("RokiJoint::GetMaxForce() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-  return 0.0;
-}
-
-ignition::math::Vector3d RokiJoint::GetLinkForce(unsigned int _index) const
-{
-  DEBUG_PRINT("RokiJoint::GetLinkForce() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-
-  ignition::math::Vector3d result;
-  return result;
-}
-
-ignition::math::Vector3d RokiJoint::GetLinkTorque(unsigned int _index) const
-{
-  DEBUG_PRINT("RokiJoint::GetLinkTorque() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-
-  ignition::math::Vector3d result;
-  return result;
+  // DEBUG_PRINT("RokiJoint::LinkTorque() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
+  // ignition::math::Vector3d result;
+  // return result;
+  gzerr << "Not implement in roki\n";
+  return ignition::math::Vector3d::Zero;
 }
 
 bool RokiJoint::SetParam(const std::string &_key, unsigned int _index, const boost::any &_value)
@@ -209,10 +209,10 @@ bool RokiJoint::SetParam(const std::string &_key, unsigned int _index, const boo
 
   try {
     if (_key == "hi_stop") {
-      this->SetHighStop(_index, boost::any_cast<double>(_value));
+      this->SetUpperLimit(_index, boost::any_cast<double>(_value));
     }
     else if (_key == "lo_stop") {
-      this->SetLowStop(_index, boost::any_cast<double>(_value));
+      this->SetLowerLimit(_index, boost::any_cast<double>(_value));
     }
     else if (_key == "friction") {
       this->SetFriction(_index, boost::any_cast<double>(_value));
@@ -266,23 +266,23 @@ double RokiJoint::GetForce(unsigned int _index)
 {
   DEBUG_PRINT("RokiJoint::GetForce() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
 
-  if (this->GetAngleCount() <= _index) {
+  if (this->DOF() <= _index) {
     gzerr << "Invalid joint index [" << _index << "] when trying to get force\n";
     return 0;
   }
   return this->GetForceImpl(_index);
 }
 
-unsigned int RokiJoint::GetAngleCount() const
+unsigned int RokiJoint::DOF() const
 {
-  DEBUG_PRINT("RokiJoint::GetAngleCount() : joint_name=%s\n", GetName().c_str());
+  DEBUG_PRINT("RokiJoint::DOF() : joint_name=%s\n", GetName().c_str());
   unsigned int angleCount = 0;
   return angleCount;
 }
 
-void RokiJoint::ApplyDamping()
+void RokiJoint::ApplyStiffnessDamping()
 {
-  DEBUG_PRINT("RokiJoint::GetAngleCount() : joint_name=%s\n", GetName().c_str());
+  DEBUG_PRINT("RokiJoint::ApplyStiffnessDamping() : joint_name=%s\n", GetName().c_str());
 }
 
 RokiModelPtr RokiJoint::GetRokiModel() const

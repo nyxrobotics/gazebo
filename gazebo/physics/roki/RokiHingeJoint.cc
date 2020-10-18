@@ -64,8 +64,8 @@ void RokiHingeJoint::Init()
   
   // set joint parameters
   prp_ = (rkJointPrpRevol*)rkjoint_->prp;
-  prp_->min = lowStop_[0].Radian();
-  prp_->max = highStop_[0].Radian();
+  prp_->min = lowStop_[0];
+  prp_->max = highStop_[0];
   prp_->tf  = friction_[0];
   prp_->sf  = friction_[0];
   

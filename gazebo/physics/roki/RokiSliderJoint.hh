@@ -4,10 +4,9 @@
 #include "ignition/math/Angle.hh"
 #include "ignition/math/Vector3.hh"
 
-#include "gazebo/util/system.hh"
-
 #include "gazebo/physics/SliderJoint.hh"
 #include "gazebo/physics/roki/RokiJoint.hh"
+#include "gazebo/util/system.hh"
 
 namespace gazebo
 {

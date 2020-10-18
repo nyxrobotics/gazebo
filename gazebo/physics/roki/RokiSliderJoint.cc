@@ -16,6 +16,7 @@ using namespace physics;
 RokiSliderJoint::RokiSliderJoint(BasePtr _parent)
   : SliderJoint<RokiJoint>(_parent), prp_(nullptr)
 {
+  //TODO:Set world id in some function.....
   DEBUG_PRINT("RokiSliderJoint::RokiSliderJoint() : joint_name=%s\n", GetName().c_str());
 }
 

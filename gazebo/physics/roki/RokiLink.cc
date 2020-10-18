@@ -391,7 +391,8 @@ void RokiLink::SetStateFromRoki()
   this->dirtyPose = dirty_pose;
 
   // notify dirty pose
-  this->world->dataPtr->dirtyPoses.push_back(this);
+  //TODO:Search what is happened in blow line (has an error)
+  //this->world->dataPtr->dirtyPoses.push_back(this);
 
   //DEBUG_PRINT("RokiLink::SetStateFromRoki() leave : name=%s\n", GetPathName().c_str());
 }
