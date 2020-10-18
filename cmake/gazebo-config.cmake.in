@@ -14,6 +14,9 @@ set(@PKG_NAME@_MEDIA_PATH "@CMAKE_INSTALL_PREFIX@/share/gazebo-@GAZEBO_MAJOR_VER
 # The model path contains the location on disk where models are stored.
 set(@PKG_NAME@_MODEL_PATH "@CMAKE_INSTALL_PREFIX@/share/gazebo-@GAZEBO_MAJOR_VERSION@/models")
 
+# Set whether Gazebo was built with roki support
+set (GAZEBO_HAS_ROKI @HAVE_ROKI@)
+
 # Set whether Gazebo was built with Bullet support
 set (GAZEBO_HAS_BULLET @HAVE_BULLET@)
 
@@ -88,6 +91,12 @@ list(APPEND @PKG_NAME@_LIBRARY_DIRS @CMAKE_INSTALL_FULL_LIBDIR@/gazebo-@GAZEBO_M
 
 list(APPEND @PKG_NAME@_CFLAGS -I@CMAKE_INSTALL_FULL_INCLUDEDIR@)
 list(APPEND @PKG_NAME@_CFLAGS -I@CMAKE_INSTALL_FULL_INCLUDEDIR@/gazebo-@GAZEBO_MAJOR_VERSION@)
+
+if (GAZEBO_HAS_ROKI)
+  find_package(roki REQUIRED)
+  list(APPEND @PKG_NAME@_INCLUDE_DIRS ${ROKI_INCLUDE_DIR})
+  list(APPEND @PKG_NAME@_LIBRARIES ${ROKI_LIBRARIES})
+endif()
 
 if (GAZEBO_HAS_BULLET)
   if (PKG_CONFIG_FOUND)
