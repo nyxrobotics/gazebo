@@ -49,7 +49,7 @@ void help()
   << "  -h [ --help ]                 Produce this help message.\n"
   << "  -u [ --pause ]                Start the server in a paused state.\n"
   << "  -e [ --physics ] arg          Specify a physics engine "
-  << "(ode|bullet|dart|simbody).\n"
+  << "(ode|bullet|dart|simbody|roki).\n"
   << "  -p [ --play ] arg             Play a log file.\n"
   << "  -r [ --record ]               Record state data.\n"
   << "  --record_encoding arg (=zlib) Compression encoding format for log "
