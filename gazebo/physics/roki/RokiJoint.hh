@@ -22,7 +22,7 @@ namespace gazebo
   {
     class GZ_PHYSICS_VISIBLE RokiJoint : public Joint
     {
-      public: RokiJoint(BasePtr _parent);
+      public: explicit RokiJoint(BasePtr _parent);
       public: virtual ~RokiJoint();
       public: virtual void Load(sdf::ElementPtr _sdf) override;
       public: virtual void Init() override;
@@ -33,9 +33,9 @@ namespace gazebo
       public: virtual void Detach() override;
       public: virtual ignition::math::Vector3d Anchor(const unsigned int _index) const override;
       public: virtual void SetAnchor(const unsigned int _index, const ignition::math::Vector3d &_anchor) override;
-      // public: virtual ignition::math::Vector3d GetAxis(unsigned int _index) const;
-      // public: virtual ignition::math::Vector3d GetGlobalAxis(unsigned int _index) const;
-      public: virtual void SetAxis(const unsigned int _index, const ignition::math::Vector3d& _axis) override;
+      // public: virtual ignition::math::Vector3d LocalAxis(unsigned int _index) const override;
+      public: virtual ignition::math::Vector3d GlobalAxis(unsigned int _index) const override;
+      public: virtual void SetAxis(const unsigned int _index, const ignition::math::Vector3d &_axis) override;
       public: virtual void SetUpperLimit(const unsigned int _index, const double _limit) override;
       public: virtual void SetLowerLimit(const unsigned int _index, const double _limit) override;
       public: virtual double UpperLimit(const unsigned int _index) const override;
@@ -48,17 +48,19 @@ namespace gazebo
       public: virtual ignition::math::Vector3d LinkForce(const unsigned int _index) const override;
       public: virtual ignition::math::Vector3d LinkTorque(const unsigned int _index) const override;
       public: virtual bool SetParam(const std::string &_key, unsigned int _index, const boost::any &_value) override;
-      // public: virtual void SetProvideFeedback(bool _enable) override;
       public: virtual double GetParam(const std::string &_key, unsigned int _index) override;
       public: virtual JointWrench GetForceTorque(unsigned int _index) override;
       public: virtual void SetForce(unsigned int _index, double _force) override;
       public: virtual void SetForceImpl(unsigned int _index, double _force) = 0;
-      // private: void SaveForce(unsigned int _index, double _force);
-      // public: virtual void CacheForceTorque() override;
       public: virtual double GetForce(unsigned int _index) override;
       public: virtual double GetForceImpl(unsigned int _index) = 0;
       public: virtual unsigned int DOF() const override;
       public: virtual void ApplyStiffnessDamping() override;
+      // ------------------Additional Functions------------------
+      // public: virtual void CacheForceTorque() override;
+      // public: virtual bool SetPosition( const unsigned int _index, const double _position, const bool _preserveWorldVelocity = false) override;
+      // public: virtual void SetProvideFeedback(bool _enable) override;
+      // private: void SaveForce(unsigned int _index, double _force);
 
       public:
         RokiModelPtr GetRokiModel() const;

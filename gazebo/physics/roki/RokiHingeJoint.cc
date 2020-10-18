@@ -107,16 +107,12 @@ void RokiHingeJoint::Init()
   DEBUG_PRINT("RokiHingeJoint::Init() leave : joint_name=%s\n", GetName().c_str());
 }
 
-ignition::math::Angle RokiHingeJoint::GetAngleImpl(unsigned int _index) const
+double RokiHingeJoint::PositionImpl(const unsigned int _index = 0) const
 {
   DEBUG_PRINT("RokiHingeJoint::GetAngleImpl() : joint_name=%s, _index=%d\n", GetName().c_str(), _index);
-
   double dis;
   rkJointGetDis(rkjoint_, &dis);
-  ignition::math::Angle angle;
-  angle.Radian(dis);
-
-  return angle;
+  return dis;
 }
 
 void RokiHingeJoint::SetVelocity(unsigned int _index, double _vel)

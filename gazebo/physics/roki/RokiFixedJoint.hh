@@ -15,7 +15,7 @@ namespace gazebo
   {
     class GZ_PHYSICS_VISIBLE RokiFixedJoint : public FixedJoint<RokiJoint>
     {
-      public: RokiFixedJoint(BasePtr _parent);
+      public: explicit RokiFixedJoint(BasePtr _parent);
       public: virtual ~RokiFixedJoint();
       public: virtual void Load(sdf::ElementPtr _sdf);
       public: virtual void Init();

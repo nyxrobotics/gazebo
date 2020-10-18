@@ -21,7 +21,7 @@ namespace gazebo
         SOLVER_VOLUME
       };
 
-      public: RokiPhysics(WorldPtr _world);
+      public: explicit RokiPhysics(WorldPtr _world);
       public: virtual ~RokiPhysics();
 
       public: virtual void Load(sdf::ElementPtr _sdf);

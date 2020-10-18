@@ -106,19 +106,19 @@ void RokiJoint::SetAnchor(const unsigned int _index, const ignition::math::Vecto
   anchor_pos_ = _anchor;
 }
 
-// ignition::math::Vector3d RokiJoint::GetAxis(unsigned int _index) const
+// ignition::math::Vector3d RokiJoint::LocalAxis(unsigned int _index) const
 // {
 //   DEBUG_PRINT("RokiFixedJoint::GetAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
 //   return anchor_axis_;
 // }
 
-// ignition::math::Vector3d RokiJoint::GetGlobalAxis(unsigned int _index) const
-// {
-//   DEBUG_PRINT("RokiFixedJoint::GetGlobalAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
-//   return anchor_axis_;
-// }
+ignition::math::Vector3d RokiJoint::GlobalAxis(unsigned int _index) const
+{
+  DEBUG_PRINT("RokiFixedJoint::GetGlobalAxis() : joint_name=%s, _index=%d, anchor_axis_=%s\n", GetName().c_str(), _index, conv2str(anchor_axis_));
+  return anchor_axis_;
+}
 
-void RokiJoint::SetAxis(const unsigned int _index, const ignition::math::Vector3d& _axis)
+void RokiJoint::SetAxis(const unsigned int _index, const ignition::math::Vector3d &_axis)
 {
   DEBUG_PRINT("RokiJoint::SetAxis() : joint_name=%s, _index=%d, _axis=%s\n", GetName().c_str(), _index, conv2str(_axis));
   anchor_axis_ = _axis;
@@ -318,3 +318,13 @@ void RokiJoint::SetFriction(const unsigned int _index, const double value)
   if (_index >= MAX_JOINT_AXIS) return;
   friction_[_index] = value;
 }
+
+// void RokiJoint::CacheForceTorque()
+// {
+//   // Does nothing for now, will add when recovering pull request #1721
+// }
+// bool RokiJoint::SetPosition(const unsigned int _index, const double _position, const bool _preserveWorldVelocity)
+// {
+//   gzerr << "Not implement in roki\n";
+//   return false;
+// }
