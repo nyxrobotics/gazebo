@@ -41,8 +41,8 @@ set(PARALLEL_QUICKSTEP_FLAGS -O3 )#-DTIMING)# -DVERBOSE -DBENCHMARKING -DERROR )
 add_definitions(${PARALLEL_QUICKSTEP_FLAGS})
 
 # default to CPU fall back so everyone can compile this package
-set(USE_CPU "1")
-#set(USE_CUDA "1")
+#set(USE_CPU "1")
+set(USE_CUDA "1")
 #set(USE_OPENCL "1")
 #set(USE_OPENMP "1")
 

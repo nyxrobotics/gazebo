@@ -56,3 +56,14 @@ online manual for generic instructions.  For most people, the following
 sequence will suffice (might need sudo if it installed in /usr):
 
   $ make uninstall (inside the gazebo/build directory)
+--------------
+For Ubuntu
+- Do not use "make install" or "make uninstall"
+- Please use "checkinstall" or "dpkg -r <packagename>"
+- Install
+
+  $ sudo checkinstall -y -D --pkgname=gazebo9 --pkgversion=1.0.0-roki
+
+- Uninstall
+
+  $ sudo dpkg -r gazebo9

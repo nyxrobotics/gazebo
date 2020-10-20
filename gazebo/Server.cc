@@ -155,7 +155,7 @@ bool Server::ParseArgs(int _argc, char **_argv)
     ("pause,u", "Start the server in a paused state.")
     ("lockstep", "Lockstep simulation so sensor update rates are respected.")
     ("physics,e", po::value<std::string>(),
-     "Specify a physics engine (ode|bullet|dart|simbody).")
+     "Specify a physics engine (ode|bullet|dart|simbody|roki).")
     ("play,p", po::value<std::string>(), "Play a log file.")
     ("record,r", "Record state data.")
     ("record_encoding", po::value<std::string>()->default_value("zlib"),
