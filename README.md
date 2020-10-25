@@ -63,7 +63,9 @@ For Ubuntu
 - Install
 
   $ sudo checkinstall -y -D --pkgname=gazebo9 --pkgversion=1.0.0-roki
+  $ sudo apt-mark hold gazebo9
 
 - Uninstall
 
+  $ sudo apt-mark unhold gazebo9
   $ sudo dpkg -r gazebo9
