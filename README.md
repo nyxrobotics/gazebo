@@ -62,7 +62,7 @@ For Ubuntu
 - Please use "checkinstall" or "dpkg -r <packagename>"
 - Install
 
-  $ sudo checkinstall -y -D --pkgname=gazebo9 --pkgversion=1.0.0-roki
+  $ sudo checkinstall -y -D --pkgname=gazebo9 --pkgversion=9.15.0-roki
   $ sudo apt-mark hold gazebo9
 
 - Uninstall

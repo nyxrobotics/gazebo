@@ -40,6 +40,11 @@ void RegisterODEPhysics();
   void RegisterBulletPhysics();
 #endif
 
+#ifdef HAVE_ROKI
+  GZ_PHYSICS_VISIBLE
+  void RegisterRokiPhysics();
+#endif
+
 #ifdef HAVE_DART
   GZ_PHYSICS_VISIBLE
   void RegisterDARTPhysics();
@@ -62,6 +67,10 @@ void PhysicsFactory::RegisterAll()
 
 #ifdef HAVE_BULLET
   RegisterBulletPhysics();
+#endif
+
+#ifdef HAVE_ROKI
+  RegisterRokiPhysics();
 #endif
 
 #ifdef HAVE_DART

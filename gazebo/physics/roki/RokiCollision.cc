@@ -62,7 +62,7 @@ void RokiCollision::SetCategoryBits(unsigned int _bits)
 void RokiCollision::SetCollideBits(unsigned int _bits)
 {
   DEBUG_PRINT("RokiCollision::SetCollideBits() : name=%s bits=%08x\n", GetPathName().c_str(), _bits);
-  gzerr << "Roki does not provide RokiCollision::SetCollideBits()";
+  gzerr << "Roki does not provide RokiCollision::SetCollideBits()\n";
 }
 
 unsigned int RokiCollision::GetCategoryBits() const
