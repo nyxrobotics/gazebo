@@ -40,6 +40,7 @@ RokiLink::RokiLink(EntityPtr _parent)
 RokiLink::~RokiLink()
 {
   DEBUG_PRINT("RokiLink::~RokiLink()\n");
+  this->Fini();
 }
 
 void RokiLink::Load(sdf::ElementPtr _sdf)
@@ -105,6 +106,8 @@ void RokiLink::Init()
 void RokiLink::Fini()
 {
   DEBUG_PRINT("RokiLink::Fini() : name~%s\n", GetPathName().c_str());
+  //ERROR MESSAGE: gzserver: /usr/include/boost/smart_ptr/shared_ptr.hpp:648: typename boost::detail::sp_member_access<T>::type boost::shared_ptr<T>::operator->() const [with T = gazebo::physics::RokiModel; typename boost::detail::sp_member_access<T>::type = gazebo::physics::RokiModel*]: Assertion `px != 0' failed.
+
   Link::Fini();
 }
 
