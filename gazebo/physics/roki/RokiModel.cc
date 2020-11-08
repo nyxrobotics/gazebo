@@ -59,7 +59,7 @@ void RokiModel::Init()
   rkFD *fd = GetRkFD();
 
   _rkFDCellPush(fd, cell_);
-  rkFDUpdateInit(fd);
+  rkFDUpdateInit(fd);//MESSAGE:warning: cannot divid by zero value(zVec3DDiv).
 
   if (!self_collide_) {
     DEBUG_PRINT("RokiModel::Init() rkCDPairChainUnreg() : name=%s\n", GetName().c_str());

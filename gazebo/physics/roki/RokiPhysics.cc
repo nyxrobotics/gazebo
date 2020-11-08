@@ -1,7 +1,8 @@
 #ifdef _WIN32
   #include <Winsock2.h>
 #endif
-
+// Fix ERROR: cannot convert NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE to std::string
+#define _GLIBCXX_USE_CXX11_ABI 1
 #include <sdf/sdf.hh>
 
 #include <algorithm>
@@ -96,19 +97,9 @@ void RokiPhysics::InitFD_()
 
   // append dummy object
   dummy_roki_object_ = DummyRokiObjectPtr(new DummyRokiObject(fd_));
-
   // setup rkFD
   rkFDODE2Assign(fd_, Regular);
-  //rkFDODE2AssignRegular(fd_, Euler);
-  //rkFDODE2AssignRegular(fd_, Heun);
-  //rkFDODE2AssignRegular(fd_, RK4);
   rkFDODE2AssignRegular(fd_, RKG);
-  //rkFDODE2AssignRegular(fd_, RKF45);  // NG
-  //rkFDODE2AssignRegular(fd_, Adams);  // NG
-  //rkFDODE2AssignRegular(fd_, BEuler); // NG
-  //rkFDODE2AssignRegular(fd_, TR);     // NG
-  //rkFDODE2AssignRegular(fd_, BK4);    // NG
-  //rkFDODE2AssignRegular(fd_, Gear);   // NG
 
   DEBUG_PRINT("RokiPhysics::InitFD_() : this->real_time_factor=%f\n", this->targetRealTimeFactor);
   DEBUG_PRINT("RokiPhysics::InitFD_() : this->max_step_size=%f\n", this->maxStepSize);
@@ -120,8 +111,6 @@ void RokiPhysics::InitFD_()
     this->SetTargetRealTimeFactor(1.0);
   }
   rkFDSetDT(fd_, this->maxStepSize); // dummy
-  DEBUG_PRINT("RokiPhysics::InitFD_() : this->realTimeUpdateRate=%f\n", this->realTimeUpdateRate);
-  rkFDSetDT(fd_, 0.01); // dummy
   if (solver_type_ == SOLVER_VERT) {
     rkFDSetSolver(fd_, Vert);  // Volume or Vert. default: Vert
   }
@@ -129,7 +118,6 @@ void RokiPhysics::InitFD_()
     rkFDSetSolver(fd_, Volume);
   }
   rkFDUpdateInit(fd_);
-
   DEBUG_PRINT("RokiPhysics::InitFD_() : leave\n");
 }
 
@@ -137,7 +125,7 @@ void RokiPhysics::ReleaseFD_()
 {
   DEBUG_PRINT("RokiPhysics::ReleaseFD_() : enter\n");
   if (fd_ != nullptr) {
-    //rkFDUpdateDestroy(fd_);
+    rkFDUpdateDestroy(fd_);
     rkFDDestroy(fd_);
     zFree(fd_);
     fd_ = nullptr;
@@ -212,7 +200,7 @@ void RokiPhysics::Init()
 {
   printf("RokiPhysics::Init()\n");
   DEBUG_PRINT("RokiPhysics::Init() : rkFDUpdateInit(fd_)\n");
-  rkFDUpdateInit(fd_);
+  rkFDUpdateInit(fd_); //MESSAGE:warning: cannot divid by zero value(zVec3DDiv).
   DEBUG_PRINT("RokiPhysics::Init() : leave\n");
 }
 
@@ -229,7 +217,7 @@ void RokiPhysics::InitForThread()
 
 void RokiPhysics::UpdateCollision()
 {
-  //DEBUG_PRINT("RokiPhysics::UpdateCollision()\n");
+  DEBUG_PRINT("RokiPhysics::UpdateCollision()\n");
   rkCDPair *cdp;
   rkCDVert *cdv;
   rkCDVert *v;
@@ -328,21 +316,27 @@ void RokiPhysics::UpdateCollision()
     }
   }
 }
-
+// "UpdatePhysics" is called every step.
 void RokiPhysics::UpdatePhysics()
 {
   boost::recursive_mutex::scoped_lock lock(*this->physicsUpdateMutex);
 
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : maxStepSize=%f\n", this->GetMaxStepSize());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : realTimeUpdateRate=%f\n", this->GetRealTimeUpdateRate());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : targetRealTimeFactor=%f\n", this->GetTargetRealTimeFactor());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : updatePeriod=%f\n", this->GetUpdatePeriod());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : fd_->dt=%f\n", fd_->dt);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : fd_->t=%f\n", fd_->t);
-
-  rkFDSetDT(fd_, this->GetMaxStepSize());
-  rkFDUpdate(fd_);
-
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter\n");
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : maxStepSize=%f\n", this->GetMaxStepSize());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : realTimeUpdateRate=%f\n", this->GetRealTimeUpdateRate());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : targetRealTimeFactor=%f\n", this->GetTargetRealTimeFactor());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : updatePeriod=%f\n", this->GetUpdatePeriod());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->dt=%f\n", fd_->dt);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->t=%f\n", fd_->t);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_ode_step=%d\n", fd_->_ode_step);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_comp_k=%f\n", fd_->_comp_k);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_comp_l=%f\n", fd_->_comp_l);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_kf_weight=%f\n", fd_->_kf_weight);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_pyramid=%d\n", fd_->_pyramid);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->colnum_e=%d\n", fd_->colnum_e);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->colnum_r=%d\n", fd_->colnum_r);
+//  rkFDSetDT(fd_, this->GetMaxStepSize());
+  rkFDUpdate(fd_); //MESSAGE:warning: cannot divid by zero value(zVec3DDiv).
   Model_V models = this->world->Models();
   for (Model_V::iterator mi = models.begin(); mi != models.end(); ++mi) {
     Link_V links = (*mi)->GetLinks();
@@ -456,7 +450,7 @@ JointPtr RokiPhysics::CreateJoint(const std::string &_type,
 void RokiPhysics::SetGravity(const ignition::math::Vector3d &_gravity)
 {
   DEBUG_PRINT("RokiPhysics::SetGravity() : _gravity=%f, %f, %f)\n", _gravity.X(), _gravity.Y(), _gravity.Z());
-  // this->sdf->GetElement("gravity")->Set(_gravity);
+//  this->sdf->GetElement("gravity")->Set(_gravity);
   this->world->SetGravitySDF(_gravity);
 }
 
@@ -475,11 +469,10 @@ boost::any RokiPhysics::GetParam(const std::string &_key) const
 {
   boost::any value;
   this->GetParam(_key, value);
-
   DEBUG_PRINT("RokiPhysics::GetParam() : key=%s, value~%s\n", _key.c_str(), any2str(value));
   return value;
 }
-
+// Get physics params from SDF file.
 bool RokiPhysics::GetParam(const std::string &_key, boost::any &_value) const
 {
   DEBUG_PRINT("RokiPhysics::GetParam() : key=%s, value~%s\n", _key.c_str(), any2str(_value));
@@ -512,6 +505,7 @@ bool RokiPhysics::GetParam(const std::string &_key, boost::any &_value) const
   }
   return true;
 }
+// "OnRequest" is called when some params changed in gazebo gui.
 void RokiPhysics::OnRequest(ConstRequestPtr &_msg)
 {
   DEBUG_PRINT("RokiPhysics::OnRequest() : msg=(%s, %s, %f)\n", _msg->request().c_str(), "_msg->data().c_str()", _msg->dbl_data());
@@ -525,7 +519,7 @@ msgs::Response response;
   {
     msgs::Physics physicsMsg;
     physicsMsg.set_type(msgs::Physics::ROKI);
-    physicsMsg.set_solver_type(&current_solver_type_);
+//    physicsMsg.set_solver_type(&current_solver_type_);
     // min_step_size is defined but not yet used
     boost::any min_step_size;
     try
@@ -549,6 +543,7 @@ msgs::Response response;
     response.set_type(physicsMsg.GetTypeName());
     physicsMsg.SerializeToString(serializedData);
     this->responsePub->Publish(response);
+    rkFDSetDT(fd_, this->GetMaxStepSize());
   }
 }
 
@@ -570,12 +565,14 @@ void RokiPhysics::OnPhysicsMsg(ConstPhysicsPtr &_msg)
   {
     this->SetRealTimeUpdateRate(_msg->real_time_update_rate());
   }
-
   if (_msg->has_max_step_size())
   {
     this->SetMaxStepSize(_msg->max_step_size());
   }
-
+//  rkContactInfo *info  = zArrayElem(&fd_->ci, 0);
+//  rkContactInfoSetK(info, contact_info_compensation_);
+//  rkContactInfoSetL( info, contact_info_relaxation_ );
+//  rkContactInfoSetType( info, RK_CONTACT_RIGID );
   this->world->EnableAllModels();
 }
 
