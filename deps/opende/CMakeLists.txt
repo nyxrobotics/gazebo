@@ -61,10 +61,10 @@ CHECK_CXX_SOURCE_COMPILES("#include <sys/time.h>
 int main() {gettimeofday(0,0); return 1;}" HAVE_GETTIMEOFDAY)
 
 CHECK_CXX_SOURCE_COMPILES("#include <math.h> 
-int main() {isnan(0); return 1;}" HAVE_ISNAN)
+int main() {isnan((float)0); return 1;}" HAVE_ISNAN)
 
 CHECK_CXX_SOURCE_COMPILES("#include <math.h> 
-int main() {isnanf(0); return 1;}" HAVE_ISNANF)
+int main() {isnanf((float)0); return 1;}" HAVE_ISNANF)
 
 CHECK_CXX_SOURCE_COMPILES("#include <stdlib.h> 
 int main() {malloc(0); return 1;}" HAVE_MALLOC)
