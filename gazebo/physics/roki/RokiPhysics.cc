@@ -57,14 +57,19 @@ RokiPhysics::RokiPhysics(WorldPtr _world)
     contact_info_relaxation_(.01),
     contact_info_static_friction_(5.0),
     contact_info_friction_(3.0),
-    solver_type_(SOLVER_VOLUME)
+    solver_type_(SOLVER_VOLUME),
+	createdFD(false)
 {
   DEBUG_PRINT("RokiPhysics::RokiPhysics()\n");
+  ENABLE_DEBUG_PRINT();
 }
 
 RokiPhysics::~RokiPhysics()
 {
-  DEBUG_PRINT("RokiPhysics::~RokiPhysics()\n");
+//  DEBUG_PRINT("RokiPhysics::~RokiPhysics()\n");
+  rkFDUpdateDestroy(fd_);
+  rkFDDestroy(fd_);
+  createdFD = false;
 }
 
 bool RokiPhysics::IsInitFD_()
@@ -76,25 +81,36 @@ bool RokiPhysics::IsInitFD_()
 void RokiPhysics::InitFD_()
 {
   DEBUG_PRINT("RokiPhysics::InitFD_() : enter\n");
-  if (IsInitFD_()) ReleaseFD_();
-
+  if (IsInitFD_()){
+	  ReleaseFD_();
+  }
   fd_ = zAlloc(rkFD, 1);
+  if(createdFD){
+      rkFDUpdateDestroy(fd_);
+      rkFDDestroy(fd_);
+  }
   rkFDCreate(fd_);
+  createdFD = true;
 
   // dummy contact info
   zArrayAlloc(&(fd_->ci), rkContactInfo, 1);
-  rkContactInfo *ci;
-  ci = zArrayElem(&fd_->ci, 0);
-  rkContactInfoInit(ci);
+  rkContactInfo* info;
+  info = zArrayElem(&(fd_->ci), 0);
+  rkContactInfoInit(info);
   rkContactInfoRigidCreate(
-      ci, 
-        contact_info_compensation_,
-        contact_info_relaxation_,
-        contact_info_static_friction_,
-        contact_info_friction_,
-        (char*)"dummy_contact_info_rigid",
-        (char*)"dummy_contact_info_rigid");
-
+	info,
+	contact_info_compensation_,
+	contact_info_relaxation_,
+	contact_info_static_friction_,
+	contact_info_friction_,
+	(char*)"dummy_contact_info_rigid",
+	(char*)"dummy_contact_info_rigid"
+	);
+  rkContactInfoSetSF( info, 0.2 );
+  rkContactInfoSetKF( info, 0.1 );
+  rkContactInfoSetK( info, 0.1 );
+  rkContactInfoSetL( info, 0.1 );
+  rkContactInfoSetType( info, RK_CONTACT_RIGID );
   // append dummy object
   dummy_roki_object_ = DummyRokiObjectPtr(new DummyRokiObject(fd_));
   // setup rkFD
@@ -145,6 +161,7 @@ void RokiPhysics::Load(sdf::ElementPtr _sdf)
         ENABLE_DEBUG_PRINT();
         DEBUG_PRINT("RokiPhysics::Load() : ENABLE_DEBUG_PRINT()\n");
     }
+    ENABLE_DEBUG_PRINT();
   }
 
   DEBUG_PRINT("RokiPhysics::Load() : enter\n");
@@ -176,7 +193,7 @@ void RokiPhysics::Load(sdf::ElementPtr _sdf)
     if (e_roki->HasElement("solver_type")) {
       std::string solver_type_str = e_roki->Get<std::string>("solver_type");
       std::transform(solver_type_str.begin(), solver_type_str.end(), solver_type_str.begin(), ::tolower);
-      if (solver_type_str == "vert" || solver_type_str == "vertex") {
+      if (solver_type_str == std::string("vert") || solver_type_str == std::string("vertex") ){
         solver_type_ = SOLVER_VERT;
       }
       else {
@@ -322,29 +339,28 @@ void RokiPhysics::UpdatePhysics()
   boost::recursive_mutex::scoped_lock lock(*this->physicsUpdateMutex);
 
   DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter\n");
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : maxStepSize=%f\n", this->GetMaxStepSize());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : realTimeUpdateRate=%f\n", this->GetRealTimeUpdateRate());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : targetRealTimeFactor=%f\n", this->GetTargetRealTimeFactor());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : updatePeriod=%f\n", this->GetUpdatePeriod());
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->dt=%f\n", fd_->dt);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->t=%f\n", fd_->t);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_ode_step=%d\n", fd_->_ode_step);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_comp_k=%f\n", fd_->_comp_k);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_comp_l=%f\n", fd_->_comp_l);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_kf_weight=%f\n", fd_->_kf_weight);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_pyramid=%d\n", fd_->_pyramid);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->colnum_e=%d\n", fd_->colnum_e);
-  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->colnum_r=%d\n", fd_->colnum_r);
-//  rkFDSetDT(fd_, this->GetMaxStepSize());
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : maxStepSize=%f\n", this->GetMaxStepSize());
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : realTimeUpdateRate=%f\n", this->GetRealTimeUpdateRate());
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : targetRealTimeFactor=%f\n", this->GetTargetRealTimeFactor());
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : updatePeriod=%f\n", this->GetUpdatePeriod());
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->dt=%f\n", fd_->dt);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->t=%f\n", fd_->t);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_ode_step=%d\n", fd_->_ode_step);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_comp_k=%f\n", fd_->_comp_k);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_comp_l=%f\n", fd_->_comp_l);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_kf_weight=%f\n", fd_->_kf_weight);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->_pyramid=%d\n", fd_->_pyramid);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->colnum_e=%d\n", fd_->colnum_e);
+//  DEBUG_PRINT("RokiPhysics::UpdatePhysics() : fd_->colnum_r=%d\n", fd_->colnum_r);
   rkFDUpdate(fd_); //MESSAGE:warning: cannot divid by zero value(zVec3DDiv).
-  Model_V models = this->world->Models();
-  for (Model_V::iterator mi = models.begin(); mi != models.end(); ++mi) {
-    Link_V links = (*mi)->GetLinks();
-    for (Link_V::iterator li = links.begin(); li != links.end(); ++li) { 
-      RokiLinkPtr link = boost::dynamic_pointer_cast<RokiLink>(*li);
-      link->SetStateFromRoki();
-    }
-  }
+//  Model_V models = this->world->Models();
+//  for (Model_V::iterator mi = models.begin(); mi != models.end(); ++mi) {
+//    Link_V links = (*mi)->GetLinks();
+//    for (Link_V::iterator li = links.begin(); li != links.end(); ++li) {
+//      RokiLinkPtr link = boost::dynamic_pointer_cast<RokiLink>(*li);
+//      link->SetStateFromRoki();
+//    }
+//  }
 
   DEBUG_PRINT("RokiPhysics::UpdatePhysics() leave : \n");
 }
@@ -485,20 +501,22 @@ bool RokiPhysics::GetParam(const std::string &_key, boost::any &_value) const
   }
   else if (_key == "compensation")
   {
-    _value = rokiElem->GetElement("constraints")->Get<double>("compensation");
+    _value = rokiElem->GetElement("contact_info")->Get<double>("compensation");
   }
   else if (_key == "relaxation")
   {
-    _value = rokiElem->GetElement("constraints")->Get<double>("relaxation");
+    _value = rokiElem->GetElement("contact_info")->Get<double>("relaxation");
   }
   else if (_key == "static_friction")
   {
-    _value = rokiElem->GetElement("constraints")->Get<double>("static_friction");
+    _value = rokiElem->GetElement("contact_info")->Get<double>("static_friction");
   }
   else if (_key == "friction")
   {
-    _value = rokiElem->GetElement("constraints")->Get<double>("friction");
+    _value = rokiElem->GetElement("contact_info")->Get<double>("friction");
   }
+  else if (_key == "debug_print")
+	    _value = rokiElem->Get<bool>("debug_print");
   else
   {
     return PhysicsEngine::GetParam(_key, _value);
@@ -509,7 +527,7 @@ bool RokiPhysics::GetParam(const std::string &_key, boost::any &_value) const
 void RokiPhysics::OnRequest(ConstRequestPtr &_msg)
 {
   DEBUG_PRINT("RokiPhysics::OnRequest() : msg=(%s, %s, %f)\n", _msg->request().c_str(), "_msg->data().c_str()", _msg->dbl_data());
-msgs::Response response;
+  msgs::Response response;
   response.set_id(_msg->id());
   response.set_request(_msg->request());
   response.set_response("success");
@@ -519,7 +537,7 @@ msgs::Response response;
   {
     msgs::Physics physicsMsg;
     physicsMsg.set_type(msgs::Physics::ROKI);
-//    physicsMsg.set_solver_type(&current_solver_type_);
+    physicsMsg.set_solver_type(this->solverType);
     // min_step_size is defined but not yet used
     boost::any min_step_size;
     try
@@ -543,7 +561,7 @@ msgs::Response response;
     response.set_type(physicsMsg.GetTypeName());
     physicsMsg.SerializeToString(serializedData);
     this->responsePub->Publish(response);
-    rkFDSetDT(fd_, this->GetMaxStepSize());
+//    rkFDSetDT(fd_, this->GetMaxStepSize());
   }
 }
 

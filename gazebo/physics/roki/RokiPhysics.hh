@@ -69,15 +69,16 @@ namespace gazebo
 
       public:
         rkFD *fd_;
-
         double contact_info_compensation_;
         double contact_info_relaxation_;
         double contact_info_static_friction_;
         double contact_info_friction_;
         enum RokiParam solver_type_;
+        bool createdFD;
 
       private:
         DummyRokiObjectPtr dummy_roki_object_;
+      private: std::string solverType;
     };
   }
 }

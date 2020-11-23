@@ -19,6 +19,7 @@ namespace gazebo
       public: virtual void Load(sdf::ElementPtr _sdf);
       public: virtual void FillMsg(msgs::Surface &_msg);
       public: virtual void ProcessMsg(const msgs::Surface &_msg);
+      public: double maxVel;
     };
   }
 }

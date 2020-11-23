@@ -16,14 +16,10 @@ extern "C" {
 RokiModel::RokiModel(BasePtr _parent)
   : Model(_parent), cell_(nullptr), chain_(nullptr), link_id_counter_(0), self_collide_(true)
 {
-  DEBUG_PRINT("RokiModel::RokiModel()\n");
 }
-
 RokiModel::~RokiModel()
 {
-  DEBUG_PRINT("RokiModel::~RokiModel()\n");
 }
-
 void RokiModel::Init()
 {
   int link_size = GetLinks().size();
@@ -59,7 +55,7 @@ void RokiModel::Init()
   rkFD *fd = GetRkFD();
 
   _rkFDCellPush(fd, cell_);
-  rkFDUpdateInit(fd);//MESSAGE:warning: cannot divid by zero value(zVec3DDiv).
+//  rkFDUpdateInit(fd);//MESSAGE:warning: cannot divid by zero value(zVec3DDiv).
 
   if (!self_collide_) {
     DEBUG_PRINT("RokiModel::Init() rkCDPairChainUnreg() : name=%s\n", GetName().c_str());
@@ -76,12 +72,6 @@ void RokiModel::Init()
   DEBUG_PRINT("RokiModel::Init() leave : name=%s\n", GetName().c_str());
 }
 
-void RokiModel::Fini() 
-{
-  DEBUG_PRINT("RokiModel::Fini() : name=%s\n", GetName().c_str());
-
-  Model::Fini();
-}
 
 void RokiModel::DisableSelfCollide()
 {
@@ -90,5 +80,7 @@ void RokiModel::DisableSelfCollide()
 
 rkFD* RokiModel::GetRkFD() const
 {
+
+  DEBUG_PRINT("RokiModel::GetRkFD()");
   return (boost::dynamic_pointer_cast<RokiPhysics>(this->GetWorld()->Physics()))->fd_;
 }

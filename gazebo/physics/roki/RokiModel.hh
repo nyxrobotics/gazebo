@@ -2,6 +2,7 @@
 #define _ROKIMODEL_HH_
 
 #include "gazebo/physics/Model.hh"
+#include "gazebo/util/system.hh"
 #include "roki/rk_fd.h"
 #include "roki/rk_link.h"
 #include "roki/rk_joint.h"
@@ -15,7 +16,6 @@ namespace gazebo
       public: explicit RokiModel(BasePtr _parent);
       public: virtual ~RokiModel();
       public: virtual void Init();
-      public: virtual void Fini();
 
       public:
         void DisableSelfCollide();
