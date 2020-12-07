@@ -157,7 +157,7 @@ if (PKG_CONFIG_FOUND)
 
   #################################################
   # Find Roki
-  if (EXISTS "/usr/local/include/roki/rk_fd.h")
+  if (EXISTS "/usr/include/roki/rk_fd.h")
     message (STATUS "Looking for Roki - found")
     set (HAVE_ROKI TRUE)
   else()
