@@ -487,10 +487,13 @@ if (PKG_CONFIG_FOUND)
   endif ()
 
   #################################################
-  # Find Roki
+  # Find roki
   if (EXISTS "/usr/include/roki/rk_fd.h")
     message (STATUS "Looking for Roki - found")
     set (HAVE_ROKI TRUE)
+    set (ROKI_INCLUDE_DIRS "/usr/include/roki")
+    set (ROKI_CFLAGS "-I/usr/include/roki")
+    set (ROKI_LIBRARIES "roki;zeo;zm;cure;m")
   else()
     message (STATUS "Looking for Roki - not found")
     BUILD_WARNING ("Roki not found, for roki physics engine option, please install roki...http://www.mi.ams.eng.osaka-u.ac.jp/software/roki.html")

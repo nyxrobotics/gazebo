@@ -10,13 +10,16 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/deps/opende/include)
 add_subdirectory(ode)
 
 # Add roki support if present
-message([WARNING] "Searching ROKI" ...)
 if (HAVE_ROKI)
-  message([WARNING] "Found ROKI" ...)
+  message (STATUS "Found ROKI" ...)
+  message (STATUS "ROKI_INCLUDE_DIRS=${ROKI_INCLUDE_DIRS}")
+  message (STATUS "ROKI_LIBRARY_DIRS=${ROKI_LIBRARY_DIRS}")
+  message (STATUS "ROKI_CFLAGS=${ROKI_CFLAGS}")
+  message (STATUS "ROKI_LIBRARIES=${ROKI_LIBRARIES}")
+  add_subdirectory(roki)
   include_directories(${ROKI_INCLUDE_DIRS})
   link_directories(${ROKI_LIBRARY_DIRS})
   add_definitions(${ROKI_CFLAGS})
-  add_subdirectory(roki)
 endif()
 
 # Add Bullet support if present
