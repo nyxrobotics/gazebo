@@ -15,7 +15,7 @@ namespace gazebo
 {
   namespace physics
   {
-    class GZ_PHYSICS_ODE_VISIBLE RokiLink : public Link
+    class GZ_PHYSICS_VISIBLE RokiLink : public Link
     {
       public: explicit RokiLink(EntityPtr _parent);
       public: virtual ~RokiLink();

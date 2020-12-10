@@ -58,7 +58,7 @@ if (DOC_ONLY)
   return()
 endif()
 
-enable_testing()
+# enable_testing()
 
 # Use GNUInstallDirst to get canonical paths
 include(GNUInstallDirs)

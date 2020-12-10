@@ -33,7 +33,6 @@ endif()
 # Add DART support if present
 if (HAVE_DART)
   add_subdirectory(dart)
-
   include_directories(${DARTCore_INCLUDE_DIRS})
   link_directories(${DARTCore_LIBRARY_DIRS})
 endif()
@@ -41,7 +40,6 @@ endif()
 # Add Simbody support if present
 if (HAVE_SIMBODY)
   add_subdirectory(simbody)
-
   include_directories(SYSTEM ${Simbody_INCLUDE_DIR})
   link_directories(${Simbody_LIB_DIR})
   add_definitions(${Simbody_CFLAGS})
@@ -187,10 +185,6 @@ endif()
 # Link in Simbody support if present
 if (HAVE_SIMBODY)
   target_link_libraries(gazebo_physics ${Simbody_LIBRARIES})
-endif()
-
-if (HAVE_ROKI)
-  target_link_libraries(gazebo_physics gazebo_physics_roki)
 endif()
 
 if (HAVE_GDAL)

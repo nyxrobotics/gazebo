@@ -32,7 +32,7 @@ TEST_F(RokiPhysics_TEST, PhysicsParam)
 
   RokiPhysicsPtr rokiPhysics
       = boost::static_pointer_cast<RokiPhysics>(physics);
-  ASSERT_TRUE(odePhysics != NULL);
+  ASSERT_TRUE(rokiPhysics != NULL);
 }
 
 void RokiPhysics_TEST::OnPhysicsMsgResponse(ConstResponsePtr &_msg)

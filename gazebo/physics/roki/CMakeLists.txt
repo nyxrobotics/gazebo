@@ -57,6 +57,8 @@ SET (headers
 set (gtest_sources
   RokiPhysics_TEST.cc
 )
-gz_build_tests(${gtest_sources})
+
+gz_build_tests(${gtest_sources}
+  EXTRA_LIBS gazebo_physics gazebo_test_fixture)
 
 gz_install_includes("physics/roki" ${headers})

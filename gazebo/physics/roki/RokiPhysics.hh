@@ -13,7 +13,7 @@ namespace gazebo
 {
   namespace physics
   {
-    class GZ_PHYSICS_ODE_VISIBLE RokiPhysics : public PhysicsEngine 
+    class GZ_PHYSICS_VISIBLE RokiPhysics : public PhysicsEngine 
     {
       public: enum RokiParam
       {
