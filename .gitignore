@@ -6,3 +6,5 @@ Ogre.log
 .DS_Store
 *.swp
 *.orig
+
+eclipse_project/
