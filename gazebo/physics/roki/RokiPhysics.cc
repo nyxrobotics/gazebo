@@ -110,6 +110,16 @@ void RokiPhysics::InitFD_()
   //rkFDODE2AssignRegular(fd_, BK4);    // NG
   //rkFDODE2AssignRegular(fd_, Gear);   // NG
 
+  DEBUG_PRINT("RokiPhysics::InitFD_() : this->real_time_factor=%f\n", this->targetRealTimeFactor);
+  DEBUG_PRINT("RokiPhysics::InitFD_() : this->max_step_size=%f\n", this->maxStepSize);
+  DEBUG_PRINT("RokiPhysics::InitFD_() : this->realTimeUpdateRate=%f\n", this->realTimeUpdateRate);
+  if(this->realTimeUpdateRate < 1.0){
+    DEBUG_PRINT("RokiPhysics::InitFD_() :  realTimeUpdateRate TOO SMALL !! \n");
+    this->SetRealTimeUpdateRate(1000.0);
+    this->SetMaxStepSize(0.001);
+    this->SetTargetRealTimeFactor(1.0);
+  }
+  rkFDSetDT(fd_, this->maxStepSize); // dummy
   DEBUG_PRINT("RokiPhysics::InitFD_() : this->realTimeUpdateRate=%f\n", this->realTimeUpdateRate);
   rkFDSetDT(fd_, 0.01); // dummy
   if (solver_type_ == SOLVER_VERT) {
@@ -245,7 +255,7 @@ void RokiPhysics::UpdateCollision()
 
     if (!collision0 || !collision1) continue;
 
-    //DEBUG_PRINT("RokiPhysics::UpdateCollision() : cdv_num=%d\n", cdp->data.vlist.num);
+    DEBUG_PRINT("RokiPhysics::UpdateCollision() : cdv_num=%d\n", cdp->data.vlist.num);
     zListForEach(&cdp->data.vlist, cdv) {
       celld[0] = &cdv->data.cell->data;
       celld[1] = cdv->data.cell != cdp->data.cell[0] ? &cdp->data.cell[0]->data : &cdp->data.cell[1]->data;
@@ -323,7 +333,12 @@ void RokiPhysics::UpdatePhysics()
 {
   boost::recursive_mutex::scoped_lock lock(*this->physicsUpdateMutex);
 
-  //DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : maxStepSize=%f\n", this->GetMaxStepSize());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : maxStepSize=%f\n", this->GetMaxStepSize());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : realTimeUpdateRate=%f\n", this->GetRealTimeUpdateRate());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : targetRealTimeFactor=%f\n", this->GetTargetRealTimeFactor());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : updatePeriod=%f\n", this->GetUpdatePeriod());
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : fd_->dt=%f\n", fd_->dt);
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() enter : fd_->t=%f\n", fd_->t);
 
   rkFDSetDT(fd_, this->GetMaxStepSize());
   rkFDUpdate(fd_);
@@ -337,7 +352,7 @@ void RokiPhysics::UpdatePhysics()
     }
   }
 
-  //DEBUG_PRINT("RokiPhysics::UpdatePhysics() leave : \n");
+  DEBUG_PRINT("RokiPhysics::UpdatePhysics() leave : \n");
 }
 
 void RokiPhysics::Fini()
@@ -466,14 +481,74 @@ boost::any RokiPhysics::GetParam(const std::string &_key) const
 
 bool RokiPhysics::GetParam(const std::string &_key, boost::any &_value) const
 {
-  bool rv = PhysicsEngine::GetParam(_key, _value);
   DEBUG_PRINT("RokiPhysics::GetParam() : key=%s, value~%s\n", _key.c_str(), any2str(_value));
-  return rv;
-}
+  sdf::ElementPtr rokiElem = this->sdf->GetElement("roki");
+  GZ_ASSERT(rokiElem != nullptr, "ROKI SDF element does not exist");
 
+  if (_key == "solver_type")
+  {
+    _value = rokiElem->Get<std::string>("solver_type");
+  }
+  else if (_key == "compensation")
+  {
+    _value = rokiElem->GetElement("constraints")->Get<double>("compensation");
+  }
+  else if (_key == "relaxation")
+  {
+    _value = rokiElem->GetElement("constraints")->Get<double>("relaxation");
+  }
+  else if (_key == "static_friction")
+  {
+    _value = rokiElem->GetElement("constraints")->Get<double>("static_friction");
+  }
+  else if (_key == "friction")
+  {
+    _value = rokiElem->GetElement("constraints")->Get<double>("friction");
+  }
+  else
+  {
+    return PhysicsEngine::GetParam(_key, _value);
+  }
+  return true;
+}
 void RokiPhysics::OnRequest(ConstRequestPtr &_msg)
 {
-  DEBUG_PRINT("RokiPhysics::OnRequest() : msg=(%s, %s, %f)\n", _msg->request().c_str(), _msg->data().c_str(), _msg->dbl_data());
+  DEBUG_PRINT("RokiPhysics::OnRequest() : msg=(%s, %s, %f)\n", _msg->request().c_str(), "_msg->data().c_str()", _msg->dbl_data());
+msgs::Response response;
+  response.set_id(_msg->id());
+  response.set_request(_msg->request());
+  response.set_response("success");
+  std::string *serializedData = response.mutable_serialized_data();
+
+  if (_msg->request() == "physics_info")
+  {
+    msgs::Physics physicsMsg;
+    physicsMsg.set_type(msgs::Physics::ROKI);
+    physicsMsg.set_solver_type(&current_solver_type_);
+    // min_step_size is defined but not yet used
+    boost::any min_step_size;
+    try
+    {
+      if (this->GetParam("min_step_size", min_step_size))
+        physicsMsg.set_min_step_size(boost::any_cast<double>(min_step_size));
+    }
+    catch(boost::bad_any_cast &_e)
+    {
+      gzerr << "Failed boost::any_cast in RokiPhysics.cc: " << _e.what();
+    }
+    physicsMsg.set_enable_physics(this->world->PhysicsEnabled());;
+    physicsMsg.mutable_gravity()->CopyFrom(
+      msgs::Convert(this->world->Gravity()));
+    physicsMsg.mutable_magnetic_field()->CopyFrom(
+      msgs::Convert(this->world->MagneticField()));
+    physicsMsg.set_real_time_update_rate(this->realTimeUpdateRate);
+    physicsMsg.set_real_time_factor(this->targetRealTimeFactor);
+    physicsMsg.set_max_step_size(this->maxStepSize);
+
+    response.set_type(physicsMsg.GetTypeName());
+    physicsMsg.SerializeToString(serializedData);
+    this->responsePub->Publish(response);
+  }
 }
 
 void RokiPhysics::OnPhysicsMsg(ConstPhysicsPtr &_msg)
